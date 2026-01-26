@@ -18,7 +18,7 @@ The application now includes an **in-memory database fallback** that works witho
 6. Create a `.env` file in this directory:
 
 ```env
-MONGODB_URI=mongodb+srv://username:password@cluster0.xxxxx.mongodb.net/?retryWrites=true&w=majority
+MONGODB_URI=<YOUR_MONGODB_ATLAS_CONNECTION_STRING>
 DB_NAME=campus-food-redistribution
 PORT=9876
 ```
