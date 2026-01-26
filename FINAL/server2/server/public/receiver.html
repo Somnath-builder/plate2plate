@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Plate2Plate – Receive Food</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #f6f7f8;
+    }
+    header {
+      background: #1b5e20;
+      color: white;
+      padding: 16px;
+      font-size: 20px;
+    }
+    .container {
+      max-width: 900px;
+      margin: auto;
+      padding: 20px;
+    }
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      border-bottom: 2px solid #ddd;
+    }
+    .tab {
+      background: none;
+      border: none;
+      padding: 12px 24px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      color: #666;
+      border-bottom: 3px solid transparent;
+      transition: all 0.3s;
+    }
+    .tab:hover {
+      color: #1b5e20;
+    }
+    .tab.active {
+      color: #1b5e20;
+      border-bottom-color: #1b5e20;
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    .card {
+      background: white;
+      padding: 16px;
+      border-radius: 10px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .card.reserved {
+      border-left: 4px solid #1b5e20;
+    }
+    button {
+      background: #1b5e20;
+      color: white;
+      border: none;
+      padding: 10px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:disabled {
+      background: gray;
+      cursor: not-allowed;
+    }
+    .badge {
+      display: inline-block;
+      background: #1b5e20;
+      color: white;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-left: 8px;
+    }
+    .card.completed {
+      border-left: 4px solid #4caf50;
+    }
+  </style>
+</head>
+<body>
+
+<header>Plate2Plate – Receive Food</header>
+
+<div class="container">
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('available')">Available Donations</button>
+    <button class="tab" onclick="switchTab('reservations')">My Reservations</button>
+  </div>
+
+  <div id="available-tab" class="tab-content active">
+    <div id="donations">Loading donations…</div>
+  </div>
+
+  <div id="reservations-tab" class="tab-content">
+    <div id="reservations">Loading reservations…</div>
+  </div>
+</div>
+
+<script>
+  const donationsEl = document.getElementById("donations");
+  const reservationsEl = document.getElementById("reservations");
+  let currentTab = "available";
+
+  function getUser() {
+    const raw = localStorage.getItem("plate2plate_user");
+    return raw ? JSON.parse(raw) : null;
+  }
+
+  function switchTab(tab) {
+    currentTab = tab;
+    
+    // Update tab buttons
+    document.querySelectorAll(".tab").forEach((t, index) => {
+      t.classList.remove("active");
+      if ((tab === "available" && index === 0) || (tab === "reservations" && index === 1)) {
+        t.classList.add("active");
+      }
+    });
+    
+    // Update tab content
+    document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
+    
+    if (tab === "available") {
+      document.getElementById("available-tab").classList.add("active");
+      loadDonations();
+    } else {
+      document.getElementById("reservations-tab").classList.add("active");
+      loadReservations();
+    }
+  }
+
+  async function loadDonations() {
+    donationsEl.innerHTML = "Loading donations…";
+
+    const res = await fetch("/api/donations");
+    const data = await res.json();
+
+    if (!data.length) {
+      donationsEl.innerHTML = "<p>No available donations</p>";
+      return;
+    }
+
+    donationsEl.innerHTML = "";
+    data.forEach(renderDonation);
+  }
+
+  async function loadReservations() {
+    const user = getUser();
+    if (!user) {
+      reservationsEl.innerHTML = "<p>Please login first</p>";
+      return;
+    }
+
+    reservationsEl.innerHTML = "Loading reservations…";
+
+    const res = await fetch("/api/donations/reservations", {
+      headers: {
+        "x-user-id": user.id || user.email
+      }
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      reservationsEl.innerHTML = `<p>Error: ${data.error || "Failed to load reservations"}</p>`;
+      return;
+    }
+
+    if (!data.length) {
+      reservationsEl.innerHTML = "<p>You haven't reserved any donations yet.</p>";
+      return;
+    }
+
+    reservationsEl.innerHTML = "";
+    data.forEach(renderReservation);
+  }
+
+  function renderDonation(d) {
+    const div = document.createElement("div");
+    div.className = "card";
+
+    div.innerHTML = `
+      <h3>${d.foodName}</h3>
+      <p><b>Category:</b> ${d.foodCategory}</p>
+      <p><b>Quantity:</b> ${d.quantity} ${d.unit}</p>
+      <p><b>Expires:</b> ${new Date(d.expiryDate).toLocaleString()}</p>
+      <p><b>Pickup:</b>
+        ${new Date(d.pickupStartDate).toLocaleString()}
+        →
+        ${new Date(d.pickupEndDate).toLocaleString()}
+      </p>
+      ${d.donorContact ? `<p><b>Donor Contact:</b> ${d.donorContact}</p>` : ''}
+      ${d.donorAddress ? `<p><b>Donor Address:</b> ${d.donorAddress}</p>` : ''}
+      <button onclick="reserveDonation('${d._id}')">Reserve</button>
+    `;
+
+    donationsEl.appendChild(div);
+  }
+
+  function renderReservation(d) {
+    const div = document.createElement("div");
+    const isCompleted = d.status === "completed";
+    div.className = `card ${isCompleted ? "completed" : "reserved"}`;
+
+    const statusBadge = isCompleted 
+      ? '<span class="badge" style="background: #4caf50;">COMPLETED</span>'
+      : '<span class="badge">RESERVED</span>';
+
+    div.innerHTML = `
+      <h3>${d.foodName} ${statusBadge}</h3>
+      <p><b>Category:</b> ${d.foodCategory}</p>
+      <p><b>Quantity:</b> ${d.quantity} ${d.unit}</p>
+      <p><b>Expires:</b> ${new Date(d.expiryDate).toLocaleString()}</p>
+      <p><b>Pickup:</b>
+        ${new Date(d.pickupStartDate).toLocaleString()}
+        →
+        ${new Date(d.pickupEndDate).toLocaleString()}
+      </p>
+      ${d.donorContact ? `<p><b>Donor Contact:</b> ${d.donorContact}</p>` : ''}
+      ${d.donorAddress ? `<p><b>Donor Address:</b> ${d.donorAddress}</p>` : ''}
+      <p><b>Reserved on:</b> ${new Date(d.updatedAt || d.createdAt).toLocaleString()}</p>
+      ${d.code && !isCompleted ? `<p style="font-size: 18px; font-weight: bold; color: #1b5e20; margin-top: 10px;"><b>Your Code:</b> ${d.code}</p>` : ''}
+      ${isCompleted ? `<p style="color: #4caf50; font-weight: bold;">✓ Donation completed</p>` : ''}
+    `;
+
+    reservationsEl.appendChild(div);
+  }
+
+  async function reserveDonation(id) {
+    const user = getUser();
+    if (!user) {
+      alert("Please login first");
+      return;
+    }
+
+    const res = await fetch(`/api/donations/${id}/reserve`, {
+      method: "POST",
+      headers: {
+        "x-user-id": user.id || user.email
+      }
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      alert(data.error || "Reservation failed");
+      return;
+    }
+
+    alert("Donation reserved successfully!");
+    loadDonations();
+    // Also refresh reservations if on that tab
+    if (currentTab === "reservations") {
+      loadReservations();
+    }
+  }
+
+  // Load initial data
+  loadDonations();
+</script>
+
+</body>
+</html>

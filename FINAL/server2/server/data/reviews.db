@@ -1,0 +1,6 @@
+{
+  "$$indexCreated":{"fieldName":"listing_id","unique":false,"sparse":false}
+}
+{
+  "$$indexCreated":{"fieldName":"created_at","unique":false,"sparse":false}
+}

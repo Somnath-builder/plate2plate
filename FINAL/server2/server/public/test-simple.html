@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Test Page</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-section { margin: 20px 0; padding: 20px; border: 1px solid #ccc; border-radius: 8px; }
+        .btn { background: #0f9d58; color: white; border: none; padding: 10px 16px; border-radius: 6px; cursor: pointer; margin: 5px; }
+        .result { margin: 10px 0; padding: 10px; background: #f0f0f0; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <h1>Simple Test Page</h1>
+    
+    <div class="test-section">
+        <h3>Basic Page Test</h3>
+        <p>If you can see this text, the page is loading correctly.</p>
+        <p>Current time: <span id="current-time"></span></p>
+    </div>
+    
+    <div class="test-section">
+        <h3>API Health Check</h3>
+        <button class="btn" onclick="testHealth()">Test API Health</button>
+        <div id="health-result" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>Listings API Test</h3>
+        <button class="btn" onclick="testListings()">Test Listings API</button>
+        <div id="listings-result" class="result"></div>
+    </div>
+
+    <script>
+        // Update current time
+        document.getElementById('current-time').textContent = new Date().toLocaleString();
+        
+        async function testHealth() {
+            const resultDiv = document.getElementById('health-result');
+            resultDiv.textContent = 'Testing...';
+            
+            try {
+                const response = await fetch('/api/health');
+                const result = await response.json();
+                resultDiv.textContent = `Health check result: ${JSON.stringify(result)}`;
+            } catch (error) {
+                resultDiv.textContent = `Error: ${error.message}`;
+            }
+        }
+        
+        async function testListings() {
+            const resultDiv = document.getElementById('listings-result');
+            resultDiv.textContent = 'Testing...';
+            
+            try {
+                const response = await fetch('/api/listings');
+                const result = await response.json();
+                resultDiv.textContent = `Listings API result: ${result.length} listings found`;
+            } catch (error) {
+                resultDiv.textContent = `Error: ${error.message}`;
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+{
+  "name": "campus-food-redistribution-server",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    ".",
+    "client"
+  ],
+  "scripts": {
+    "dev": "nodemon src/index.js",
+    "start": "node src/index.js",
+    "dev:all": "turbo run dev --parallel",
+    "build:all": "turbo run build",
+    "lint:all": "turbo run lint"
+  },
+  "dependencies": {
+    "axios": "^1.6.0",
+    "cors": "2.8.5",
+    "dayjs": "1.11.11",
+    "dotenv": "^16.6.1",
+    "express": "4.19.2",
+    "mongodb": "^6.18.0",
+    "morgan": "1.10.0",
+    "node-fetch": "^3.3.2"
+  },
+  "devDependencies": {
+    "nodemon": "3.1.0",
+    "turbo": "^2.1.3"
+  }
+}

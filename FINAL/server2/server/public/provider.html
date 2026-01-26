@@ -1,0 +1,451 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <title>Plate2Plate – Food Provider</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <link rel="icon" href="/logo.svg">
+
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Fjalla+One&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: "Quicksand", system-ui;
+      background: #f9f9f9;
+      color: #212121;
+    }
+    header {
+      background: #1b5e20;
+      color: white;
+      padding: 16px 24px;
+    }
+    h1 {
+      font-family: "Fjalla One";
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .container {
+      max-width: 900px;
+      margin: auto;
+      padding: 32px 20px;
+    }
+    .card {
+      background: white;
+      border-radius: 14px;
+      padding: 24px;
+      box-shadow: 0 6px 18px rgba(0,0,0,.08);
+    }
+    label {
+      display: block;
+      margin-top: 14px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #555;
+    }
+    input, select {
+      width: 100%;
+      padding: 11px 12px;
+      margin-top: 6px;
+      border-radius: 10px;
+      border: 1px solid #ddd;
+      font-size: 14px;
+    }
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    .btn {
+      margin-top: 22px;
+      background: #1b5e20;
+      color: white;
+      border: none;
+      padding: 14px;
+      border-radius: 10px;
+      font-weight: 700;
+      cursor: pointer;
+      width: 100%;
+      font-size: 15px;
+    }
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 14px 18px;
+      border-radius: 10px;
+      color: white;
+      z-index: 999;
+      font-weight: 600;
+    }
+    .notification.success { background: #1b5e20; }
+    .notification.error { background: #e53935; }
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      border-bottom: 2px solid #ddd;
+    }
+    .tab {
+      background: none;
+      border: none;
+      padding: 12px 24px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      color: #666;
+      border-bottom: 3px solid transparent;
+      transition: all 0.3s;
+    }
+    .tab:hover {
+      color: #1b5e20;
+    }
+    .tab.active {
+      color: #1b5e20;
+      border-bottom-color: #1b5e20;
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    .donation-card {
+      background: white;
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .donation-card.reserved {
+      border-left: 4px solid #1b5e20;
+    }
+    .badge {
+      display: inline-block;
+      color: white;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-left: 8px;
+    }
+    .badge.available {
+      background: #4caf50;
+    }
+    .badge.reserved {
+      background: #ff9800;
+    }
+    .donation-card.completed {
+      border-left: 4px solid #4caf50;
+    }
+    input[type="text"]:focus {
+      outline: none;
+      border-color: #1b5e20;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>
+    <img src="/logo.svg" width="36">
+    Plate2Plate – Food Provider
+  </h1>
+</header>
+
+<div class="container">
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('publish')">Publish Donation</button>
+    <button class="tab" onclick="switchTab('my-donations')">My Donations</button>
+  </div>
+
+  <div id="publish-tab" class="tab-content active">
+    <div class="card">
+      <h3>Donate Raw / Packaged Food</h3>
+
+      <form id="donation-form">
+
+      <label>Food Category *</label>
+      <select id="foodCategory" name="foodCategory" required>
+        <option value="">Select category</option>
+        <option value="raw">Raw</option>
+        <option value="packaged">Packaged</option>
+      </select>
+
+      <label>Food Name *</label>
+      <input id="foodName" name="foodName" placeholder="Rice, Wheat Flour, Biscuits" required />
+
+      <div class="row">
+        <div>
+          <label>Quantity *</label>
+          <input id="quantity" name="quantity" type="number" min="0.1" step="0.1" required />
+        </div>
+        <div>
+          <label>Unit *</label>
+          <select id="unit" name="unit" required>
+            <option value="kg">Kg</option>
+            <option value="liters">Liters</option>
+            <option value="packets">Packets</option>
+          </select>
+        </div>
+      </div>
+
+      <label>Expiry Date *</label>
+      <input id="expiryDate" name="expiryDate" type="date" required />
+
+      <label>Storage Type *</label>
+      <select id="storageType" name="storageType" required>
+        <option value="ambient">Ambient</option>
+        <option value="refrigerated">Refrigerated</option>
+      </select>
+
+      <label>Condition *</label>
+      <select id="condition" name="condition" required>
+        <option value="sealed">Sealed</option>
+        <option value="loose">Loose</option>
+        <option value="fresh">Fresh</option>
+      </select>
+
+      <div class="row">
+        <div>
+          <label>Pickup Start Date *</label>
+          <input id="pickupStartDate" name="pickupStartDate" type="date" required />
+        </div>
+        <div>
+          <label>Pickup End Date *</label>
+          <input id="pickupEndDate" name="pickupEndDate" type="date" required />
+        </div>
+      </div>
+
+      <button class="btn" type="submit">Publish Donation</button>
+    </form>
+    </div>
+  </div>
+
+  <div id="my-donations-tab" class="tab-content">
+    <div id="my-donations">Loading donations…</div>
+  </div>
+</div>
+
+<script>
+  let currentTab = "publish";
+
+  function getCurrentUser() {
+    const raw = localStorage.getItem("plate2plate_user");
+    return raw ? JSON.parse(raw) : null;
+  }
+
+  function notify(msg, type = "success") {
+    const n = document.createElement("div");
+    n.className = "notification " + type;
+    n.innerText = msg;
+    document.body.appendChild(n);
+    setTimeout(() => n.remove(), 4000);
+  }
+
+  function switchTab(tab) {
+    currentTab = tab;
+    
+    // Update tab buttons
+    document.querySelectorAll(".tab").forEach((t, index) => {
+      t.classList.remove("active");
+      if ((tab === "publish" && index === 0) || (tab === "my-donations" && index === 1)) {
+        t.classList.add("active");
+      }
+    });
+    
+    // Update tab content
+    document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
+    
+    if (tab === "publish") {
+      document.getElementById("publish-tab").classList.add("active");
+    } else {
+      document.getElementById("my-donations-tab").classList.add("active");
+      loadMyDonations();
+    }
+  }
+
+  async function loadMyDonations() {
+    const user = getCurrentUser();
+    if (!user || !user.email) {
+      document.getElementById("my-donations").innerHTML = "<p>Please login first</p>";
+      return;
+    }
+
+    const donationsEl = document.getElementById("my-donations");
+    donationsEl.innerHTML = "Loading donations…";
+
+    try {
+      const res = await fetch("/api/donations/my-donations", {
+        headers: {
+          "x-user-id": user.email
+        }
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        donationsEl.innerHTML = `<p>Error: ${data.error || "Failed to load donations"}</p>`;
+        return;
+      }
+
+      if (!data.length) {
+        donationsEl.innerHTML = "<p>You haven't published any donations yet.</p>";
+        return;
+      }
+
+      donationsEl.innerHTML = "";
+      data.forEach(renderMyDonation);
+    } catch (err) {
+      donationsEl.innerHTML = `<p>Error: ${err.message}</p>`;
+    }
+  }
+
+  function renderMyDonation(d) {
+    const div = document.createElement("div");
+    const isReserved = d.status === "reserved";
+    const isCompleted = d.status === "completed";
+    div.className = `donation-card ${isReserved ? "reserved" : ""} ${isCompleted ? "completed" : ""}`;
+
+    const statusBadge = isCompleted
+      ? '<span class="badge" style="background: #4caf50;">COMPLETED</span>'
+      : isReserved
+      ? '<span class="badge reserved">RESERVED</span>'
+      : '<span class="badge available">AVAILABLE</span>';
+
+    const codeInputSection = isReserved ? `
+      <div style="margin-top: 15px; padding: 15px; background: #f5f5f5; border-radius: 8px;">
+        <p style="margin-bottom: 10px; font-weight: 600;">Enter code to complete donation:</p>
+        <div style="display: flex; gap: 10px; align-items: center;">
+          <input type="text" id="code-input-${d._id}" placeholder="Enter 4-digit code" 
+                 maxlength="4" pattern="[0-9]{4}" 
+                 style="padding: 8px; border: 1px solid #ddd; border-radius: 6px; width: 150px; font-size: 16px; text-align: center; letter-spacing: 4px;"
+                 onkeypress="return /[0-9]/.test(event.key)">
+          <button onclick="completeDonation('${d._id}')" 
+                  style="background: #1b5e20; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 600;">
+            Complete
+          </button>
+        </div>
+        <p id="code-error-${d._id}" style="color: #e53935; font-size: 12px; margin-top: 5px; display: none;"></p>
+      </div>
+    ` : '';
+
+    div.innerHTML = `
+      <h3>${d.foodName} ${statusBadge}</h3>
+      <p><b>Category:</b> ${d.foodCategory}</p>
+      <p><b>Quantity:</b> ${d.quantity} ${d.unit}</p>
+      <p><b>Expires:</b> ${new Date(d.expiryDate).toLocaleString()}</p>
+      <p><b>Pickup:</b>
+        ${new Date(d.pickupStartDate).toLocaleString()}
+        →
+        ${new Date(d.pickupEndDate).toLocaleString()}
+      </p>
+      <p><b>Status:</b> ${d.status}</p>
+      ${d.receiverId ? `<p><b>Reserved by:</b> ${d.receiverId}</p>` : ''}
+      <p><b>Published on:</b> ${new Date(d.createdAt).toLocaleString()}</p>
+      ${codeInputSection}
+      ${isCompleted ? `<p style="color: #4caf50; font-weight: bold; margin-top: 10px;">✓ Donation completed</p>` : ''}
+    `;
+
+    document.getElementById("my-donations").appendChild(div);
+  }
+
+  async function completeDonation(id) {
+    const codeInput = document.getElementById(`code-input-${id}`);
+    const errorEl = document.getElementById(`code-error-${id}`);
+    const code = codeInput.value.trim();
+
+    if (!code || code.length !== 4) {
+      errorEl.textContent = "Please enter a 4-digit code";
+      errorEl.style.display = "block";
+      return;
+    }
+
+    const user = getCurrentUser();
+    if (!user || !user.email) {
+      notify("Please login first", "error");
+      return;
+    }
+
+    errorEl.style.display = "none";
+
+    try {
+      const res = await fetch(`/api/donations/${id}/complete`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-user-id": user.email
+        },
+        body: JSON.stringify({ code })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        errorEl.textContent = data.error || "Failed to complete donation";
+        errorEl.style.display = "block";
+        return;
+      }
+
+      notify("Donation completed successfully! ✓");
+      loadMyDonations();
+    } catch (err) {
+      errorEl.textContent = err.message || "An error occurred";
+      errorEl.style.display = "block";
+    }
+  }
+
+  document.getElementById("donation-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const user = getCurrentUser();
+    if (!user || !user.email) {
+      notify("Please login first", "error");
+      return;
+    }
+
+    const data = {
+      foodCategory: foodCategory.value,
+      foodName: foodName.value,
+      quantity: Number(quantity.value),
+      unit: unit.value,
+      expiryDate: expiryDate.value,
+      storageType: storageType.value,
+      condition: condition.value,
+      pickupStartDate: pickupStartDate.value,
+      pickupEndDate: pickupEndDate.value,
+      donorContact: user.phone || "",
+      donorAddress: user.address || ""
+    };
+
+    try {
+      const res = await fetch("/api/donations", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-user-id": user.email
+        },
+        body: JSON.stringify(data)
+      });
+
+      const result = await res.json();
+      if (!res.ok) throw new Error(result.error || "Failed");
+
+      notify("Donation published successfully 🎉");
+      e.target.reset();
+      
+      // Refresh my donations if on that tab
+      if (currentTab === "my-donations") {
+        loadMyDonations();
+      }
+    } catch (err) {
+      notify(err.message, "error");
+    }
+  });
+</script>
+
+</body>
+</html>

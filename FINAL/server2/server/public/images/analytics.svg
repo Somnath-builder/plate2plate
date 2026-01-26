@@ -1,0 +1,29 @@
+<svg width="220" height="144" viewBox="0 0 220 144" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background grid -->
+  <rect x="20" y="20" width="180" height="104" rx="4" fill="#FFFFFF" stroke="#0F9D58" stroke-width="2" stroke-dasharray="4 4"/>
+  
+  <!-- X and Y axis -->
+  <line x1="40" y1="104" x2="180" y2="104" stroke="#0F9D58" stroke-width="3" stroke-linecap="round"/>
+  <line x1="40" y1="40" x2="40" y2="104" stroke="#0F9D58" stroke-width="3" stroke-linecap="round"/>
+  
+  <!-- Bar chart elements -->
+  <rect x="60" y="70" width="16" height="34" fill="#0F9D58" stroke="#0F9D58" stroke-width="1"/>
+  <rect x="90" y="50" width="16" height="54" fill="#0F9D58" stroke="#0F9D58" stroke-width="1"/>
+  <rect x="120" y="80" width="16" height="24" fill="#0F9D58" stroke="#0F9D58" stroke-width="1"/>
+  <rect x="150" y="60" width="16" height="44" fill="#0F9D58" stroke="#0F9D58" stroke-width="1"/>
+  
+  <!-- Line chart -->
+  <path d="M60 60L90 40L120 70L150 50" stroke="#0B7A44" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <circle cx="60" cy="60" r="4" fill="#FFFFFF" stroke="#0B7A44" stroke-width="2"/>
+  <circle cx="90" cy="40" r="4" fill="#FFFFFF" stroke="#0B7A44" stroke-width="2"/>
+  <circle cx="120" cy="70" r="4" fill="#FFFFFF" stroke="#0B7A44" stroke-width="2"/>
+  <circle cx="150" cy="50" r="4" fill="#FFFFFF" stroke="#0B7A44" stroke-width="2"/>
+  
+  <!-- Pie chart in corner -->
+  <circle cx="170" cy="30" r="10" fill="#FFFFFF" stroke="#0F9D58" stroke-width="2"/>
+  <path d="M170 30L170 20A10 10 0 0 1 178.66 25L170 30Z" fill="#0F9D58"/>
+  <path d="M170 30L178.66 25A10 10 0 0 1 170 40L170 30Z" fill="#0B7A44"/>
+  <path d="M170 30L170 40A10 10 0 0 1 161.34 25L170 30Z" fill="#E6F4EA"/>
+  <path d="M170 30L161.34 25A10 10 0 0 1 170 20L170 30Z" fill="#CDE9D6"/>
+</svg>
+

@@ -1,0 +1,22 @@
+<svg width="220" height="144" viewBox="0 0 220 144" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Food container/box -->
+  <rect x="40" y="40" width="140" height="80" rx="8" fill="#FFFFFF" stroke="#0F9D58" stroke-width="4"/>
+  
+  <!-- Food items in container -->
+  <circle cx="70" cy="60" r="10" fill="#E6F4EA" stroke="#0F9D58" stroke-width="2"/>
+  <circle cx="100" cy="60" r="10" fill="#E6F4EA" stroke="#0F9D58" stroke-width="2"/>
+  <circle cx="130" cy="60" r="10" fill="#E6F4EA" stroke="#0F9D58" stroke-width="2"/>
+  <circle cx="160" cy="60" r="10" fill="#E6F4EA" stroke="#0F9D58" stroke-width="2"/>
+  
+  <!-- Divider in container -->
+  <line x1="40" y1="80" x2="180" y2="80" stroke="#0F9D58" stroke-width="2" stroke-dasharray="4 4"/>
+  
+  <!-- Hands receiving food -->
+  <path d="M30 100C50 90 70 100 80 120" stroke="#0F9D58" stroke-width="4" stroke-linecap="round"/>
+  <path d="M190 100C170 90 150 100 140 120" stroke="#0F9D58" stroke-width="4" stroke-linecap="round"/>
+  
+  <!-- Person silhouette (simplified) -->
+  <circle cx="110" cy="20" r="12" fill="#FFFFFF" stroke="#0F9D58" stroke-width="3"/>
+  <path d="M110 32V40" stroke="#0F9D58" stroke-width="3" stroke-linecap="round"/>
+</svg>
+

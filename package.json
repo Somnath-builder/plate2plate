@@ -1,0 +1,18 @@
+{
+  "name": "plate2plate",
+  "version": "1.0.0",
+  "description": "Plate2Plate application",
+  "main": "index.js",
+  "scripts": {
+    "dev": "npm run dev --prefix FINAL/server2/server",
+    "start": "npm start --prefix FINAL/server2/server",
+    "dev:all": "npm run dev:all --prefix FINAL/server2/server",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "mongoose": "^9.1.4"
+  }
+}

@@ -1,0 +1,20 @@
+<svg width="220" height="144" viewBox="0 0 220 144" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Food tray with food items -->
+  <rect x="20" y="80" width="180" height="30" rx="5" fill="#FFFFFF" stroke="#0F9D58" stroke-width="4"/>
+  <rect x="30" y="60" width="160" height="20" rx="5" fill="#FFFFFF" stroke="#0F9D58" stroke-width="4"/>
+  
+  <!-- Food items on tray -->
+  <circle cx="60" cy="70" r="10" fill="#E6F4EA" stroke="#0F9D58" stroke-width="2"/>
+  <circle cx="90" cy="70" r="10" fill="#E6F4EA" stroke="#0F9D58" stroke-width="2"/>
+  <circle cx="120" cy="70" r="10" fill="#E6F4EA" stroke="#0F9D58" stroke-width="2"/>
+  <circle cx="150" cy="70" r="10" fill="#E6F4EA" stroke="#0F9D58" stroke-width="2"/>
+  
+  <!-- Hand offering food -->
+  <path d="M110 110C90 110 70 120 60 140" stroke="#0F9D58" stroke-width="4" stroke-linecap="round"/>
+  <path d="M110 110C130 110 150 120 160 140" stroke="#0F9D58" stroke-width="4" stroke-linecap="round"/>
+  
+  <!-- Chef hat -->
+  <path d="M110 20C90 20 80 30 80 40C80 50 90 55 90 60H130C130 55 140 50 140 40C140 30 130 20 110 20Z" fill="#FFFFFF" stroke="#0F9D58" stroke-width="4"/>
+  <rect x="90" y="60" width="40" height="10" fill="#FFFFFF" stroke="#0F9D58" stroke-width="4"/>
+</svg>
+

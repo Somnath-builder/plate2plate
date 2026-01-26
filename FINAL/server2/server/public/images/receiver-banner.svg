@@ -1,0 +1,27 @@
+<svg width="800" height="240" viewBox="0 0 800 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="240" rx="18" fill="#E6F4EA"/>
+  <path d="M0 200c100-60 180-60 260 0s160 60 240 0 160-60 240 0" fill="#CDE9D6"/>
+  <g transform="translate(56,48)">
+    <!-- Food container/box -->
+    <rect x="40" y="40" width="140" height="80" rx="8" fill="#FFFFFF" stroke="#0F9D58" stroke-width="4"/>
+    
+    <!-- Food items in container -->
+    <circle cx="70" cy="60" r="10" fill="#E6F4EA" stroke="#0F9D58" stroke-width="2"/>
+    <circle cx="100" cy="60" r="10" fill="#E6F4EA" stroke="#0F9D58" stroke-width="2"/>
+    <circle cx="130" cy="60" r="10" fill="#E6F4EA" stroke="#0F9D58" stroke-width="2"/>
+    <circle cx="160" cy="60" r="10" fill="#E6F4EA" stroke="#0F9D58" stroke-width="2"/>
+    
+    <!-- Divider in container -->
+    <line x1="40" y1="80" x2="180" y2="80" stroke="#0F9D58" stroke-width="2" stroke-dasharray="4 4"/>
+    
+    <!-- Person silhouette (simplified) -->
+    <circle cx="110" cy="20" r="12" fill="#FFFFFF" stroke="#0F9D58" stroke-width="3"/>
+    <path d="M110 32V40" stroke="#0F9D58" stroke-width="3" stroke-linecap="round"/>
+  </g>
+  <g transform="translate(340,56)">
+    <rect x="0" y="0" width="404" height="128" rx="16" fill="#FFFFFF" stroke="#0F9D58" stroke-width="4"/>
+    <text x="20" y="54" font-family="Inter, Arial" font-size="28" fill="#0B7A44">Find available food nearby</text>
+    <text x="20" y="92" font-family="Inter, Arial" font-size="18" fill="#0B7A44">Claim and coordinate easy pickups</text>
+  </g>
+</svg>
+

@@ -1,0 +1,2 @@
+{"$$indexCreated":{"fieldName":"starts_at","unique":false,"sparse":false}}
+{"$$indexCreated":{"fieldName":"ends_at","unique":false,"sparse":false}}

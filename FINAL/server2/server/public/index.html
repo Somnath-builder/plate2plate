@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plate2Plate - Connect Food Providers with Those in Need</title>
+    <link rel="icon" href="/logo.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Fjalla+One&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #F9F9F9;
+            --text: #212121;
+            --muted: #757575;
+            --green: #1B5E20;
+            --green-dark: #0D3F10;
+            --green-ghost: #E8F5E9;
+            --border: #E0E0E0;
+            --card: #ffffff;
+            --accent: #CDDC39;
+            --orange: #FF7043;
+        }
+        
+        body {
+            font-family: 'Quicksand', ui-sans-serif, system-ui;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg);
+            color: var(--text);
+            font-weight: 500;
+            min-height: 100vh;
+        }
+        
+        .hero {
+            background: linear-gradient(135deg, var(--green-ghost), #FFFBF0);
+            padding: 80px 24px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .logo {
+            width: 180px;
+            height: 180px;
+            margin: 0 auto 20px;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        h1 {
+            font-family: 'Fjalla One', sans-serif;
+            font-size: 48px;
+            margin: 0;
+            color: var(--green);
+            letter-spacing: 1px;
+        }
+        
+        .motto {
+            font-size: 20px;
+            margin: 16px 0 40px;
+            color: var(--green-dark);
+            font-weight: 600;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 24px;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+        
+        .feature {
+            background: var(--card);
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .feature:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+        }
+        
+        .feature img {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 16px;
+        }
+        
+        .feature h3 {
+            margin: 0 0 12px;
+            color: var(--green);
+        }
+        
+        .feature p {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+        
+        .cta {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 40px;
+        }
+        
+        .btn {
+            background: var(--green);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-family: 'Quicksand', sans-serif;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            text-decoration: none;
+            font-size: 16px;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 12px rgba(27,94,32,0.2);
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(27,94,32,0.3);
+        }
+        
+        .btn.secondary {
+            background: var(--orange);
+            box-shadow: 0 4px 12px rgba(255,112,67,0.2);
+        }
+        
+        .btn.secondary:hover {
+            box-shadow: 0 6px 16px rgba(255,112,67,0.3);
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 24px;
+            background: var(--green-ghost);
+            color: var(--muted);
+            margin-top: 40px;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 36px;
+            }
+            
+            .motto {
+                font-size: 18px;
+            }
+            
+            .logo {
+                width: 140px;
+                height: 140px;
+            }
+            
+            .features {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <img src="/logo.svg" alt="Plate2Plate Logo" class="logo">
+        <h1>Plate2Plate</h1>
+        <p class="motto">Every Plate MATTERS - Connecting Food Providers with Those in Need</p>
+        <div class="cta">
+            <a href="/auth.html" class="btn secondary">Sign Up</a>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="features">
+            <div class="feature">
+                <img src="/images/images.jpeg" alt="Provide Food">
+                <h3>Provide Surplus Food</h3>
+                <p>List your surplus food items and help reduce food waste while supporting those in need.</p>
+            </div>
+            <div class="feature">
+                <img src="/images/images 02.jpeg" alt="Receive Food">
+                <h3>Receive Available Food</h3>
+                <p>Browse available food listings and request items that would otherwise go to waste.</p>
+            </div>
+            <div class="feature">
+                <img src="/images/events.svg" alt="Campus Events">
+                <h3>Campus Events</h3>
+                <p>Organize and discover campus events where food sharing and sustainability are promoted.</p>
+            </div>
+        </div>
+        
+        <div class="features">
+            <div class="feature">
+                <img src="/images/provider-banner.svg" alt="For Providers">
+                <h3>For Food Providers</h3>
+                <p>Restaurants, cafeterias, and individuals with surplus food can easily list available items and track their impact.</p>
+            </div>
+            <div class="feature">
+                <img src="/images/receiver-banner.svg" alt="For Receivers">
+                <h3>For Food Receivers</h3>
+                <p>Students, community members, and organizations can find and request available food items in their area.</p>
+            </div>
+            <div class="feature">
+                <img src="/images/analytics.svg" alt="Impact Analytics">
+                <h3>Track Your Impact</h3>
+                <p>See how your contributions help reduce food waste and environmental impact with detailed analytics.</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p>Plate2Plate - Built for a sustainable campus</p>
+    </div>
+
+    <script>
+        // Check if user is already logged in
+        window.addEventListener('load', () => {
+            const user = localStorage.getItem('plate2plate_user');
+            // If user is already logged in, redirect to dashboard
+            if (user) {
+                window.location.href = '/dashboard.html';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Login - Plate2Plate</title>
+    <link rel="icon" href="/logo.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Fjalla+One&display=swap" rel="stylesheet">
+    <style>
+      :root { --bg:#F9F9F9; --text:#212121; --muted:#757575; --green:#1B5E20; --green-dark:#0D3F10; --border:#E0E0E0; --accent:#CDDC39; --orange:#FF7043; }
+      body { font-family: 'Quicksand', ui-sans-serif, system-ui; margin: 0; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; align-items: center; justify-content: center; font-weight: 500; }
+      .login-container { background: #fff; border: none; border-radius: 20px; padding: 36px; width: 100%; max-width: 480px; box-shadow: 0 15px 40px rgba(0,0,0,0.1); transition: all 0.3s ease; }
+      .logo { text-align: center; margin-bottom: 24px; font-family: 'Fjalla One', sans-serif; letter-spacing: 0.5px; }
+      .logo img { height: 56px; margin-bottom: 8px; }
+      .logo h1 { font-family: 'Fjalla One', sans-serif; font-size: 28px; margin: 0 0 6px; letter-spacing: 0.5px; }
+      .logo p { color: var(--muted); margin: 0; font-size: 14px; }
+      .form-group { margin-bottom: 16px; }
+      label { display:block; font-size: 13px; color: var(--muted); margin-bottom:6px; font-weight: 600; }
+      input { width:100%; padding:14px 18px; border-radius:12px; border:1px solid var(--border); background:#fff; color: var(--text); font-size: 15px; box-sizing: border-box; font-family: 'Quicksand', sans-serif; margin-bottom: 16px; transition: all 0.3s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+      input:focus { outline:none; border-color: var(--green); box-shadow: 0 0 0 3px rgba(15,157,88,0.15); }
+      .btn { width: 100%; background: var(--green); color:#fff; border:none; padding: 14px 18px; border-radius:12px; cursor:pointer; font-weight:700; font-size:16px; transition: all 0.3s ease; margin-top: 16px; font-family: 'Quicksand', sans-serif; letter-spacing: 0.5px; text-shadow: 0 1px 1px rgba(0,0,0,0.2); box-shadow: 0 4px 12px rgba(27,94,32,0.2); }
+      .btn:hover { background: var(--green-dark); transform: translateY(-2px); box-shadow: 0 6px 16px rgba(27,94,32,0.25); }
+      .error { color:#dc2626; font-size:14px; margin-top:8px; display:none; }
+      .success { color:var(--green-dark); font-size:14px; margin-top:8px; display:none; }
+      .required { color:#dc2626; }
+    </style>
+  </head>
+  <body>
+    <div class="login-container">
+      <div class="logo">
+        <img src="/logo.svg" alt="Plate2Plate" onerror="this.style.display='none'" />
+        <h1>Plate2Plate</h1>
+        <p>Connect surplus food providers with those who need it</p>
+      </div>
+      <form id="login-form">
+        <div class="form-group">
+          <label for="name">Full Name <span class="required">*</span></label>
+          <input type="text" id="name" name="name" required placeholder="Enter your full name">
+        </div>
+        <div class="form-group">
+          <label for="address">Address <span class="required">*</span></label>
+          <input type="text" id="address" name="address" required placeholder="Enter your full address">
+        </div>
+        <div class="form-group">
+          <label for="phone">Phone Number <span class="required">*</span></label>
+          <input type="tel" id="phone" name="phone" required placeholder="Enter your phone number">
+        </div>
+        <div class="form-group">
+          <label for="email">Email Address <span class="required">*</span></label>
+          <input type="email" id="email" name="email" required placeholder="Enter your email address">
+        </div>
+        <button type="submit" class="btn" id="submit-btn">Continue to Plate2Plate</button>
+      </form>
+      <div id="error-message" class="error"></div>
+      <div id="success-message" class="success"></div>
+    </div>
+    <script>
+      const loginForm = document.getElementById('login-form');
+      const errorMessage = document.getElementById('error-message');
+      const successMessage = document.getElementById('success-message');
+      const submitBtn = document.getElementById('submit-btn');
+      function showError(m){ errorMessage.textContent=m; errorMessage.style.display='block'; successMessage.style.display='none'; }
+      function showSuccess(m){ successMessage.textContent=m; successMessage.style.display='block'; errorMessage.style.display='none'; }
+      function validateEmail(e){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e); }
+      function validatePhone(p){ return /^[\+]?\d[\d\s\-()]{5,}$/.test(p); }
+      loginForm.addEventListener('submit', (e)=>{
+        e.preventDefault(); errorMessage.style.display='none'; successMessage.style.display='none';
+        const fd = new FormData(loginForm);
+        const userData = { name: fd.get('name').trim(), address: fd.get('address').trim(), phone: fd.get('phone').trim(), email: fd.get('email').trim() };
+        if (!userData.name) return showError('Please enter your full name');
+        if (!userData.address) return showError('Please enter your address');
+        if (!validatePhone(userData.phone)) return showError('Please enter a valid phone number');
+        if (!validateEmail(userData.email)) return showError('Please enter a valid email');
+        submitBtn.disabled = true; submitBtn.textContent='Setting up your account...';
+        try {
+          // Store (or overwrite) current user session
+          localStorage.setItem('plate2plate_user', JSON.stringify({ ...userData, loginTime: Date.now() }));
+          // Also ensure the users list contains this user so auth page login works
+          const users = JSON.parse(localStorage.getItem('plate2plate_users')||'[]');
+          if (!users.find(u=>u.email.toLowerCase()===userData.email.toLowerCase())) {
+            users.push({ name:userData.name, email:userData.email, password:'', address:userData.address, phone:userData.phone, createdAt: Date.now() });
+            localStorage.setItem('plate2plate_users', JSON.stringify(users));
+          }
+          showSuccess('Welcome to Plate2Plate! Redirecting...');
+          setTimeout(()=>{ window.location.href='/dashboard.html'; }, 1000);
+        } finally {
+          submitBtn.disabled = false; submitBtn.textContent='Continue to Plate2Plate';
+        }
+      });
+      window.addEventListener('load', ()=>{
+        const u = localStorage.getItem('plate2plate_user');
+        if (u) window.location.href = '/dashboard.html';
+      });
+    </script>
+  </body>
+</html>
