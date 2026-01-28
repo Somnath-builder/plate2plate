@@ -33,7 +33,7 @@ const sseClients = new Set();
 function broadcast(event, data) {
 	const payload = `event: ${event}\ndata: ${JSON.stringify(data)}\n\n`;
 	for (const res of sseClients) {
-		try { res.write(payload); } catch {}
+		try { res.write(payload); } catch { }
 	}
 }
 
@@ -334,7 +334,7 @@ app.get('/api/analytics', async (_req, res) => {
 			db.collection('listings').countDocuments({ created_at: { $gte: dayAgo } }),
 			db.collection('listings').countDocuments({ created_at: { $gte: weekAgo } }),
 		]);
-		
+
 		// Calculate carbon credits from all listings
 		const carbonRecords = await db.collection('carbon_tracking').find({}).toArray();
 		console.log('Carbon records found:', carbonRecords.length);
@@ -344,15 +344,15 @@ app.get('/api/analytics', async (_req, res) => {
 		const totalCarbonCredits = carbonRecords.reduce((sum, record) => sum + (record.carbon_credits?.net || 0), 0);
 		const totalCarbonValue = carbonRecords.reduce((sum, record) => sum + (record.carbon_credit_value?.netValue || 0), 0);
 		console.log('Total carbon credits:', totalCarbonCredits, 'Total value:', totalCarbonValue);
-		
+
 		const assumedKgPerListing = 5;
 		const kgSaved = completedListings * assumedKgPerListing;
 		const carbonKgAvoided = kgSaved * 2.5;
 		const waterLitersSaved = kgSaved * 1500;
-		
-		res.json({ 
-			totals: { totalListings, activeListings, completedListings, expiredListings, pickupsCount }, 
-			recent: { lastDayListings, lastWeekListings }, 
+
+		res.json({
+			totals: { totalListings, activeListings, completedListings, expiredListings, pickupsCount },
+			recent: { lastDayListings, lastWeekListings },
 			impact: { kgSaved, carbonKgAvoided, waterLitersSaved, assumedKgPerListing },
 			carbonCredits: {
 				totalCredits: totalCarbonCredits,
@@ -397,21 +397,21 @@ app.post('/api/reviews', async (req, res) => {
 		if (rating < 1 || rating > 5) {
 			return res.status(400).json({ error: 'Rating must be between 1 and 5' });
 		}
-		
+
 		// Check if the listing exists
 		const objectId = toObjectId(listing_id);
 		if (!objectId) return res.status(400).json({ error: 'Invalid listing ID' });
 		const listing = await db.collection('listings').findOne({ _id: objectId });
 		if (!listing) return res.status(404).json({ error: 'Listing not found' });
-		
+
 		// Check if the user has claimed this listing
 		const pickup = await db.collection('pickups').findOne({ listing_id, claimer: reviewer });
 		if (!pickup) return res.status(403).json({ error: 'You can only review listings you have claimed' });
-		
+
 		// Check if the user has already reviewed this listing
 		const existingReview = await db.collection('reviews').findOne({ listing_id, reviewer });
 		if (existingReview) return res.status(400).json({ error: 'You have already reviewed this listing' });
-		
+
 		const review = {
 			listing_id,
 			reviewer,
@@ -419,10 +419,10 @@ app.post('/api/reviews', async (req, res) => {
 			comment: comment || null,
 			created_at: Date.now()
 		};
-		
+
 		const result = await db.collection('reviews').insertOne(review);
 		const insertedReview = { ...review, _id: result.insertedId };
-		
+
 		broadcast('review', insertedReview);
 		res.status(201).json(insertedReview);
 	} catch (error) {
@@ -451,16 +451,16 @@ app.post('/api/messages', async (req, res) => {
 		if (!listing_id || !sender || !recipient || !content) {
 			return res.status(400).json({ error: 'Missing required fields' });
 		}
-		
+
 		// Check if the listing exists
 		const objectId = toObjectId(listing_id);
 		if (!objectId) return res.status(400).json({ error: 'Invalid listing ID' });
 		const listing = await db.collection('listings').findOne({ _id: objectId });
 		if (!listing) return res.status(404).json({ error: 'Listing not found' });
-		
+
 		// Anyone can send messages now
 		const isProvider = listing.contact && listing.contact.includes(sender);
-		
+
 		const message = {
 			listing_id,
 			sender,
@@ -469,10 +469,10 @@ app.post('/api/messages', async (req, res) => {
 			read: false,
 			created_at: Date.now()
 		};
-		
+
 		const result = await db.collection('messages').insertOne(message);
 		const insertedMessage = { ...message, _id: result.insertedId };
-		
+
 		broadcast('message', insertedMessage);
 		res.status(201).json(insertedMessage);
 	} catch (error) {
@@ -489,7 +489,7 @@ app.get('/api/messages/:user', async (req, res) => {
 			.find({ $or: [{ sender: user }, { recipient: user }] })
 			.sort({ created_at: -1 })
 			.toArray();
-		
+
 		res.json(messages);
 	} catch (error) {
 		console.error('Error fetching messages:', error);
@@ -503,16 +503,16 @@ app.put('/api/messages/:id/read', async (req, res) => {
 		const id = req.params.id;
 		const objectId = toObjectId(id);
 		if (!objectId) return res.status(400).json({ error: 'Invalid message ID' });
-		
+
 		const result = await db.collection('messages').updateOne(
 			{ _id: objectId },
 			{ $set: { read: true } }
 		);
-		
+
 		if (result.modifiedCount === 0) {
 			return res.status(404).json({ error: 'Message not found or already marked as read' });
 		}
-		
+
 		res.json({ success: true });
 	} catch (error) {
 		console.error('Error marking message as read:', error);
@@ -524,15 +524,15 @@ app.put('/api/messages/:id/read', async (req, res) => {
 app.get('/api/leaderboard', async (req, res) => {
 	try {
 		if (!db) return res.status(503).json({ error: 'Database not connected' });
-		
+
 		// Get all listings with owner information
 		const listings = await db.collection('listings').find({}).toArray();
-		
+
 		// Create a map of provider contributions
 		const providerMap = {};
 		for (const listing of listings) {
 			if (!listing.owner_email) continue;
-			
+
 			if (!providerMap[listing.owner_email]) {
 				// Initialize with default values
 				providerMap[listing.owner_email] = {
@@ -543,7 +543,7 @@ app.get('/api/leaderboard', async (req, res) => {
 					completed_listings: 0
 				};
 			}
-			
+
 			// Update the name for this provider based on the current listing
 			// Priority: provider_name > owner_name > contact > email
 			if (listing.provider_name && listing.provider_name.trim()) {
@@ -553,18 +553,18 @@ app.get('/api/leaderboard', async (req, res) => {
 			} else if (listing.contact && listing.contact.trim()) {
 				providerMap[listing.owner_email].name = listing.contact.trim();
 			}
-			
+
 			providerMap[listing.owner_email].listings += 1;
 			providerMap[listing.owner_email].total_quantity += parseQuantity(listing.quantity);
 			if (listing.status === 'completed') {
 				providerMap[listing.owner_email].completed_listings += 1;
 			}
 		}
-		
+
 		// Convert to array and sort by total quantity in descending order
 		const providers = Object.values(providerMap);
 		providers.sort((a, b) => b.total_quantity - a.total_quantity);
-		
+
 		// Debug logging
 		console.log('Leaderboard data:', {
 			totalProviders: providers.length,
@@ -575,7 +575,7 @@ app.get('/api/leaderboard', async (req, res) => {
 				total_quantity: p.total_quantity
 			}))
 		});
-		
+
 		// Return top 5 providers
 		res.json(providers.slice(0, 5));
 	} catch (error) {
@@ -620,7 +620,7 @@ app.post('/api/carbon/calculate', async (req, res) => {
 app.post('/api/carbon/calculate-listing/:id', async (req, res) => {
 	try {
 		if (!db) return res.status(503).json({ error: 'Database not connected' });
-		
+
 		const id = req.params.id;
 		const objectId = toObjectId(id);
 		if (!objectId) return res.status(400).json({ error: 'Invalid listing ID' });
@@ -629,7 +629,7 @@ app.post('/api/carbon/calculate-listing/:id', async (req, res) => {
 		if (!listing) return res.status(404).json({ error: 'Listing not found' });
 
 		const { transportMethod, distanceKm } = req.body;
-		
+
 		const result = await carbonCalculator.calculateListingEmissions(listing, {
 			transportMethod: transportMethod || 'car',
 			distanceKm: distanceKm || 5
@@ -691,7 +691,7 @@ app.post('/api/carbon/track', async (req, res) => {
 		};
 
 		const record = await carbonTracking.createRecord(trackingData);
-		
+
 		// Broadcast the new carbon tracking record
 		broadcast('carbon_tracked', record);
 
@@ -809,6 +809,20 @@ app.get('/api/carbon/rates', (_req, res) => {
 	}
 });
 
+// Serve Next.js static files from the client build
+app.use(express.static(path.join(__dirname, '..', 'public', 'client')));
+
+// Catch-all route to serve index.html for client-side routing
+// This must be AFTER all API routes
+app.get('*', (req, res) => {
+	// Don't serve index.html for API routes
+	if (req.path.startsWith('/api')) {
+		return res.status(404).json({ error: 'API endpoint not found' });
+	}
+	res.sendFile(path.join(__dirname, '..', 'public', 'client', 'index.html'));
+});
+
+
 // Try to use the specified port or find an available one
 const startPort = process.env.PORT || 3000;
 const maxPortAttempts = 10; // Try up to 10 ports
@@ -816,7 +830,7 @@ const maxPortAttempts = 10; // Try up to 10 ports
 async function findAvailablePort(startingPort, maxAttempts) {
 	const net = await import('net');
 	let port = startingPort;
-	
+
 	for (let attempt = 0; attempt < maxAttempts; attempt++) {
 		const isAvailable = await new Promise((resolve, reject) => {
 			const server = net.createServer();
@@ -833,53 +847,53 @@ async function findAvailablePort(startingPort, maxAttempts) {
 				resolve(true); // Port is available
 			});
 		});
-		
+
 		if (isAvailable) {
 			return port; // Port is available, return it
 		}
-		
+
 		// Port is in use, try the next one
 		port++;
 	}
-	
+
 	throw new Error(`Could not find an available port after ${maxAttempts} attempts`);
 }
 
 async function startServer() {
-  try {
-    const PORT = await findAvailablePort(startPort, maxPortAttempts);
+	try {
+		const PORT = await findAvailablePort(startPort, maxPortAttempts);
 
-    console.log("Attempting to connect to MongoDB (Mongoose)...");
-    await mongoose.connect(process.env.MONGODB_URI, {
-      dbName: process.env.DB_NAME,
-    });
-    console.log("Mongoose connected successfully");
+		console.log("Attempting to connect to MongoDB (Mongoose)...");
+		await mongoose.connect(process.env.MONGODB_URI, {
+			dbName: process.env.DB_NAME,
+		});
+		console.log("Mongoose connected successfully");
 
-    console.log("Attempting to connect to MongoDB (Native Driver)...");
-    const { db: database } = await connectToDatabase();
-    db = database;
-    console.log("Native MongoDB connected successfully");
+		console.log("Attempting to connect to MongoDB (Native Driver)...");
+		const { db: database } = await connectToDatabase();
+		db = database;
+		console.log("Native MongoDB connected successfully");
 
-    const server = app.listen(PORT, () => {
-      console.log(`Server running on http://localhost:${PORT}`);
-    });
+		const server = app.listen(PORT, () => {
+			console.log(`Server running on http://localhost:${PORT}`);
+		});
 
-    server.on("error", (err) => {
-      console.error("Server error:", err);
-      process.exit(1);
-    });
+		server.on("error", (err) => {
+			console.error("Server error:", err);
+			process.exit(1);
+		});
 
-    process.on("SIGINT", async () => {
-      console.log("Shutting down gracefully...");
-      await mongoose.disconnect();
-      await closeDatabase();
-      process.exit(0);
-    });
+		process.on("SIGINT", async () => {
+			console.log("Shutting down gracefully...");
+			await mongoose.disconnect();
+			await closeDatabase();
+			process.exit(0);
+		});
 
-  } catch (error) {
-    console.error("Failed to start server:", error);
-    process.exit(1);
-  }
+	} catch (error) {
+		console.error("Failed to start server:", error);
+		process.exit(1);
+	}
 }
 
 
