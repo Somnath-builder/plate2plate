@@ -823,45 +823,11 @@ app.get('*', (req, res) => {
 });
 
 
-// Try to use the specified port or find an available one
-const startPort = process.env.PORT || 3000;
-const maxPortAttempts = 10; // Try up to 10 ports
-
-async function findAvailablePort(startingPort, maxAttempts) {
-	const net = await import('net');
-	let port = startingPort;
-
-	for (let attempt = 0; attempt < maxAttempts; attempt++) {
-		const isAvailable = await new Promise((resolve, reject) => {
-			const server = net.createServer();
-			server.on('error', (err) => {
-				if (err.code === 'EADDRINUSE') {
-					server.close();
-					resolve(false); // Port is in use
-				} else {
-					reject(err);
-				}
-			});
-			server.listen(port, () => {
-				server.close();
-				resolve(true); // Port is available
-			});
-		});
-
-		if (isAvailable) {
-			return port; // Port is available, return it
-		}
-
-		// Port is in use, try the next one
-		port++;
-	}
-
-	throw new Error(`Could not find an available port after ${maxAttempts} attempts`);
-}
+// Use the PORT environment variable (required for Render and other cloud platforms)
+const PORT = process.env.PORT || 3000;
 
 async function startServer() {
 	try {
-		const PORT = await findAvailablePort(startPort, maxPortAttempts);
 
 		console.log("Attempting to connect to MongoDB (Mongoose)...");
 		await mongoose.connect(process.env.MONGODB_URI, {
