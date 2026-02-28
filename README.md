@@ -1,2 +1,2 @@
 # plate2plate
-donate and recieve surplus food
+A full-stack food redistribution platform that connects surplus food providers with receivers in real time — helping reduce food waste and improve accessibility.
