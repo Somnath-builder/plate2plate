@@ -1,451 +1,371 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="utf-8"/>
-  <title>Plate2Plate – Food Provider</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <link rel="icon" href="/logo.svg">
-
-  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Fjalla+One&display=swap" rel="stylesheet">
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Provide Food - Plate2Plate</title>
+  <link rel="icon" href="/logo.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sora:wght@700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="/globals.css">
   <style>
-    body {
-      margin: 0;
-      font-family: "Quicksand", system-ui;
-      background: #f9f9f9;
-      color: #212121;
+    .page-header {
+      background: var(--primary-light);
+      padding: var(--space-2xl) 0;
+      margin-bottom: var(--space-2xl);
+      border-bottom: 1px solid var(--border);
     }
-    header {
-      background: #1b5e20;
-      color: white;
-      padding: 16px 24px;
-    }
-    h1 {
-      font-family: "Fjalla One";
-      margin: 0;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .container {
-      max-width: 900px;
-      margin: auto;
-      padding: 32px 20px;
-    }
-    .card {
-      background: white;
-      border-radius: 14px;
-      padding: 24px;
-      box-shadow: 0 6px 18px rgba(0,0,0,.08);
-    }
-    label {
-      display: block;
-      margin-top: 14px;
-      font-size: 13px;
-      font-weight: 600;
-      color: #555;
-    }
-    input, select {
-      width: 100%;
-      padding: 11px 12px;
-      margin-top: 6px;
-      border-radius: 10px;
-      border: 1px solid #ddd;
-      font-size: 14px;
-    }
-    .row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-    }
-    .btn {
-      margin-top: 22px;
-      background: #1b5e20;
-      color: white;
-      border: none;
-      padding: 14px;
-      border-radius: 10px;
-      font-weight: 700;
-      cursor: pointer;
-      width: 100%;
-      font-size: 15px;
-    }
-    .notification {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      padding: 14px 18px;
-      border-radius: 10px;
-      color: white;
-      z-index: 999;
-      font-weight: 600;
-    }
-    .notification.success { background: #1b5e20; }
-    .notification.error { background: #e53935; }
+
     .tabs {
       display: flex;
-      gap: 10px;
-      margin-bottom: 20px;
-      border-bottom: 2px solid #ddd;
+      gap: var(--space-md);
+      margin-bottom: var(--space-xl);
+      border-bottom: 2px solid var(--border);
     }
+
     .tab {
+      padding: var(--space-sm) var(--space-lg);
+      font-weight: 700;
+      color: var(--text-muted);
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+      transition: all var(--transition-normal);
       background: none;
       border: none;
-      padding: 12px 24px;
       cursor: pointer;
-      font-size: 16px;
-      font-weight: 600;
-      color: #666;
-      border-bottom: 3px solid transparent;
-      transition: all 0.3s;
     }
-    .tab:hover {
-      color: #1b5e20;
-    }
+
     .tab.active {
-      color: #1b5e20;
-      border-bottom-color: #1b5e20;
+      color: var(--primary);
+      border-bottom-color: var(--primary);
     }
+
     .tab-content {
       display: none;
     }
+
     .tab-content.active {
       display: block;
+      animation: fadeIn var(--transition-normal) forwards;
     }
+
     .donation-card {
-      background: white;
-      border-radius: 14px;
-      padding: 20px;
-      margin-bottom: 16px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      border-left: 4px solid var(--primary);
+      transition: transform var(--transition-fast);
     }
+
     .donation-card.reserved {
-      border-left: 4px solid #1b5e20;
+      border-left-color: #f59e0b;
     }
-    .badge {
-      display: inline-block;
-      color: white;
-      padding: 4px 10px;
-      border-radius: 4px;
-      font-size: 12px;
-      font-weight: 600;
-      margin-left: 8px;
-    }
-    .badge.available {
-      background: #4caf50;
-    }
-    .badge.reserved {
-      background: #ff9800;
-    }
+
     .donation-card.completed {
-      border-left: 4px solid #4caf50;
+      border-left-color: var(--success);
     }
-    input[type="text"]:focus {
-      outline: none;
-      border-color: #1b5e20;
+
+    .badge {
+      padding: 0.25rem 0.625rem;
+      border-radius: var(--radius-full);
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .badge-available {
+      background: var(--primary-light);
+      color: var(--primary);
+    }
+
+    .badge-reserved {
+      background: #fef9c3;
+      color: #854d0e;
+    }
+
+    .badge-completed {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .verification-box {
+      background: var(--background);
+      padding: var(--space-md);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      margin-top: var(--space-md);
     }
   </style>
 </head>
 
 <body>
-
-<header>
-  <h1>
-    <img src="/logo.svg" width="36">
-    Plate2Plate – Food Provider
-  </h1>
-</header>
-
-<div class="container">
-  <div class="tabs">
-    <button class="tab active" onclick="switchTab('publish')">Publish Donation</button>
-    <button class="tab" onclick="switchTab('my-donations')">My Donations</button>
-  </div>
-
-  <div id="publish-tab" class="tab-content active">
-    <div class="card">
-      <h3>Donate Raw / Packaged Food</h3>
-
-      <form id="donation-form">
-
-      <label>Food Category *</label>
-      <select id="foodCategory" name="foodCategory" required>
-        <option value="">Select category</option>
-        <option value="raw">Raw</option>
-        <option value="packaged">Packaged</option>
-      </select>
-
-      <label>Food Name *</label>
-      <input id="foodName" name="foodName" placeholder="Rice, Wheat Flour, Biscuits" required />
-
-      <div class="row">
-        <div>
-          <label>Quantity *</label>
-          <input id="quantity" name="quantity" type="number" min="0.1" step="0.1" required />
-        </div>
-        <div>
-          <label>Unit *</label>
-          <select id="unit" name="unit" required>
-            <option value="kg">Kg</option>
-            <option value="liters">Liters</option>
-            <option value="packets">Packets</option>
-          </select>
-        </div>
+  <nav class="navbar">
+    <div class="container flex items-center justify-between">
+      <a href="/dashboard.html" class="flex items-center gap-sm">
+        <img src="/logo.svg" alt="Logo" width="32" height="32">
+        <span
+          style="font-family: 'Sora', sans-serif; font-weight: 800; font-size: 1.25rem; color: var(--primary);">Plate2Plate</span>
+      </a>
+      <div class="flex items-center gap-md">
+        <a href="/dashboard.html" class="nav-link">Dashboard</a>
+        <a href="/receiver.html" class="nav-link">Find Food</a>
       </div>
-
-      <label>Expiry Date *</label>
-      <input id="expiryDate" name="expiryDate" type="date" required />
-
-      <label>Storage Type *</label>
-      <select id="storageType" name="storageType" required>
-        <option value="ambient">Ambient</option>
-        <option value="refrigerated">Refrigerated</option>
-      </select>
-
-      <label>Condition *</label>
-      <select id="condition" name="condition" required>
-        <option value="sealed">Sealed</option>
-        <option value="loose">Loose</option>
-        <option value="fresh">Fresh</option>
-      </select>
-
-      <div class="row">
-        <div>
-          <label>Pickup Start Date *</label>
-          <input id="pickupStartDate" name="pickupStartDate" type="date" required />
-        </div>
-        <div>
-          <label>Pickup End Date *</label>
-          <input id="pickupEndDate" name="pickupEndDate" type="date" required />
-        </div>
-      </div>
-
-      <button class="btn" type="submit">Publish Donation</button>
-    </form>
     </div>
-  </div>
+  </nav>
 
-  <div id="my-donations-tab" class="tab-content">
-    <div id="my-donations">Loading donations…</div>
-  </div>
-</div>
+  <header class="page-header">
+    <div class="container">
+      <h1 style="font-family: 'Sora', sans-serif; margin-bottom: var(--space-xs);">Food Provider Portal</h1>
+      <p style="color: var(--text-muted);">Share surplus food with the campus community.</p>
+    </div>
+  </header>
 
-<script>
-  let currentTab = "publish";
+  <main class="container" style="padding-bottom: var(--space-2xl);">
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('publish')">Publish Donation</button>
+      <button class="tab" onclick="switchTab('history')">My Donations</button>
+    </div>
 
-  function getCurrentUser() {
-    const raw = localStorage.getItem("plate2plate_user");
-    return raw ? JSON.parse(raw) : null;
-  }
+    <!-- Publish Tab -->
+    <div id="publish-tab" class="tab-content active">
+      <div class="card" style="max-width: 800px; margin: 0 auto;">
+        <h2 style="margin-bottom: var(--space-lg);">New Donation Listing</h2>
+        <form id="donation-form">
+          <div class="grid grid-cols-2 gap-md">
+            <div class="form-group">
+              <label class="form-label">Food Category *</label>
+              <select id="foodCategory" name="foodCategory" class="form-input" required>
+                <option value="">Select category</option>
+                <option value="raw">Raw</option>
+                <option value="packaged">Packaged</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Food Name *</label>
+              <input id="foodName" name="foodName" class="form-input" placeholder="Rice, Biscuits, etc." required />
+            </div>
+          </div>
 
-  function notify(msg, type = "success") {
-    const n = document.createElement("div");
-    n.className = "notification " + type;
-    n.innerText = msg;
-    document.body.appendChild(n);
-    setTimeout(() => n.remove(), 4000);
-  }
+          <div class="grid grid-cols-3 gap-md">
+            <div class="form-group">
+              <label class="form-label">Quantity *</label>
+              <input id="quantity" name="quantity" type="number" step="0.1" class="form-input" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Unit *</label>
+              <select id="unit" name="unit" class="form-input" required>
+                <option value="kg">Kg</option>
+                <option value="liters">Liters</option>
+                <option value="packets">Packets</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Expiry Date *</label>
+              <input id="expiryDate" name="expiryDate" type="date" class="form-input" required />
+            </div>
+          </div>
 
-  function switchTab(tab) {
-    currentTab = tab;
-    
-    // Update tab buttons
-    document.querySelectorAll(".tab").forEach((t, index) => {
-      t.classList.remove("active");
-      if ((tab === "publish" && index === 0) || (tab === "my-donations" && index === 1)) {
-        t.classList.add("active");
-      }
-    });
-    
-    // Update tab content
-    document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
-    
-    if (tab === "publish") {
-      document.getElementById("publish-tab").classList.add("active");
-    } else {
-      document.getElementById("my-donations-tab").classList.add("active");
-      loadMyDonations();
-    }
-  }
+          <div class="grid grid-cols-2 gap-md">
+            <div class="form-group">
+              <label class="form-label">Storage Type *</label>
+              <select id="storageType" name="storageType" class="form-input" required>
+                <option value="ambient">Ambient</option>
+                <option value="refrigerated">Refrigerated</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Condition *</label>
+              <select id="condition" name="condition" class="form-input" required>
+                <option value="sealed">Sealed</option>
+                <option value="loose">Loose</option>
+                <option value="fresh">Fresh</option>
+              </select>
+            </div>
+          </div>
 
-  async function loadMyDonations() {
-    const user = getCurrentUser();
-    if (!user || !user.email) {
-      document.getElementById("my-donations").innerHTML = "<p>Please login first</p>";
-      return;
-    }
+          <div class="grid grid-cols-2 gap-md">
+            <div class="form-group">
+              <label class="form-label">Pickup Start Date *</label>
+              <input id="pickupStartDate" name="pickupStartDate" type="date" class="form-input" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Pickup End Date *</label>
+              <input id="pickupEndDate" name="pickupEndDate" type="date" class="form-input" required />
+            </div>
+          </div>
 
-    const donationsEl = document.getElementById("my-donations");
-    donationsEl.innerHTML = "Loading donations…";
-
-    try {
-      const res = await fetch("/api/donations/my-donations", {
-        headers: {
-          "x-user-id": user.email
-        }
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        donationsEl.innerHTML = `<p>Error: ${data.error || "Failed to load donations"}</p>`;
-        return;
-      }
-
-      if (!data.length) {
-        donationsEl.innerHTML = "<p>You haven't published any donations yet.</p>";
-        return;
-      }
-
-      donationsEl.innerHTML = "";
-      data.forEach(renderMyDonation);
-    } catch (err) {
-      donationsEl.innerHTML = `<p>Error: ${err.message}</p>`;
-    }
-  }
-
-  function renderMyDonation(d) {
-    const div = document.createElement("div");
-    const isReserved = d.status === "reserved";
-    const isCompleted = d.status === "completed";
-    div.className = `donation-card ${isReserved ? "reserved" : ""} ${isCompleted ? "completed" : ""}`;
-
-    const statusBadge = isCompleted
-      ? '<span class="badge" style="background: #4caf50;">COMPLETED</span>'
-      : isReserved
-      ? '<span class="badge reserved">RESERVED</span>'
-      : '<span class="badge available">AVAILABLE</span>';
-
-    const codeInputSection = isReserved ? `
-      <div style="margin-top: 15px; padding: 15px; background: #f5f5f5; border-radius: 8px;">
-        <p style="margin-bottom: 10px; font-weight: 600;">Enter code to complete donation:</p>
-        <div style="display: flex; gap: 10px; align-items: center;">
-          <input type="text" id="code-input-${d._id}" placeholder="Enter 4-digit code" 
-                 maxlength="4" pattern="[0-9]{4}" 
-                 style="padding: 8px; border: 1px solid #ddd; border-radius: 6px; width: 150px; font-size: 16px; text-align: center; letter-spacing: 4px;"
-                 onkeypress="return /[0-9]/.test(event.key)">
-          <button onclick="completeDonation('${d._id}')" 
-                  style="background: #1b5e20; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 600;">
-            Complete
-          </button>
-        </div>
-        <p id="code-error-${d._id}" style="color: #e53935; font-size: 12px; margin-top: 5px; display: none;"></p>
+          <button type="submit" class="btn btn-primary" style="width: 100%;">Publish Donation</button>
+        </form>
       </div>
-    ` : '';
+    </div>
 
-    div.innerHTML = `
-      <h3>${d.foodName} ${statusBadge}</h3>
-      <p><b>Category:</b> ${d.foodCategory}</p>
-      <p><b>Quantity:</b> ${d.quantity} ${d.unit}</p>
-      <p><b>Expires:</b> ${new Date(d.expiryDate).toLocaleString()}</p>
-      <p><b>Pickup:</b>
-        ${new Date(d.pickupStartDate).toLocaleString()}
-        →
-        ${new Date(d.pickupEndDate).toLocaleString()}
-      </p>
-      <p><b>Status:</b> ${d.status}</p>
-      ${d.receiverId ? `<p><b>Reserved by:</b> ${d.receiverId}</p>` : ''}
-      <p><b>Published on:</b> ${new Date(d.createdAt).toLocaleString()}</p>
-      ${codeInputSection}
-      ${isCompleted ? `<p style="color: #4caf50; font-weight: bold; margin-top: 10px;">✓ Donation completed</p>` : ''}
-    `;
+    <!-- History Tab -->
+    <div id="history-tab" class="tab-content">
+      <div id="my-donations" class="flex flex-col gap-md">
+        <!-- Populated by JS -->
+        <div class="card text-center" style="padding: var(--space-2xl); color: var(--text-muted);">
+          <p>Loading your donation history...</p>
+        </div>
+      </div>
+    </div>
+  </main>
 
-    document.getElementById("my-donations").appendChild(div);
-  }
+  <footer>
+    <div class="container text-center">
+      <p>© 2026 Plate2Plate • Built for a sustainable campus</p>
+    </div>
+  </footer>
 
-  async function completeDonation(id) {
-    const codeInput = document.getElementById(`code-input-${id}`);
-    const errorEl = document.getElementById(`code-error-${id}`);
-    const code = codeInput.value.trim();
+  <script>
+    const user = JSON.parse(localStorage.getItem('plate2plate_user'));
+    if (!user) window.location.href = '/auth.html';
 
-    if (!code || code.length !== 4) {
-      errorEl.textContent = "Please enter a 4-digit code";
-      errorEl.style.display = "block";
-      return;
+    function switchTab(tab) {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+      if (tab === 'publish') {
+        document.querySelector('[onclick="switchTab(\'publish\')"]').classList.add('active');
+        document.getElementById('publish-tab').classList.add('active');
+      } else {
+        document.querySelector('[onclick="switchTab(\'history\')"]').classList.add('active');
+        document.getElementById('history-tab').classList.add('active');
+        loadMyDonations();
+      }
     }
 
-    const user = getCurrentUser();
-    if (!user || !user.email) {
-      notify("Please login first", "error");
-      return;
+    async function loadMyDonations() {
+      const container = document.getElementById('my-donations');
+      try {
+        const res = await fetch("/api/donations/my-donations", {
+          headers: { "x-user-id": user.email }
+        });
+        const data = await res.json();
+
+        if (!res.ok) throw new Error(data.error || "Failed to load");
+        if (data.length === 0) {
+          container.innerHTML = '<div class="card text-center"><p>You haven\'t published any donations yet.</p></div>';
+          return;
+        }
+
+        container.innerHTML = data.map(d => {
+          const isReserved = d.status === "reserved";
+          const isCompleted = d.status === "completed";
+          const badgeClass = isCompleted ? 'badge-completed' : (isReserved ? 'badge-reserved' : 'badge-available');
+
+          return `
+                        <div class="card donation-card ${isReserved ? 'reserved' : ''} ${isCompleted ? 'completed' : ''}">
+                            <div class="flex justify-between items-start" style="margin-bottom: var(--space-md);">
+                                <div>
+                                    <h3 style="margin: 0;">${d.foodName}</h3>
+                                    <span style="font-size: 0.8125rem; color: var(--text-muted);">${d.foodCategory} • ${d.quantity} ${d.unit}</span>
+                                </div>
+                                <span class="badge ${badgeClass}">${d.status}</span>
+                            </div>
+                            
+                            <div class="grid grid-cols-2 gap-md" style="font-size: 0.875rem;">
+                                <div>
+                                    <p><b>Storage:</b> ${d.storageType}</p>
+                                    <p><b>Condition:</b> ${d.condition}</p>
+                                </div>
+                                <div>
+                                    <p><b>Expires:</b> ${new Date(d.expiryDate).toLocaleDateString()}</p>
+                                    <p><b>Pickup By:</b> ${new Date(d.pickupEndDate).toLocaleDateString()}</p>
+                                </div>
+                            </div>
+
+                            ${isReserved ? `
+                                <div class="verification-box">
+                                    <p style="font-weight: 700; margin-bottom: var(--space-sm);">Verify Collection Code</p>
+                                    <div class="flex gap-sm">
+                                        <input type="text" id="code-${d._id}" class="form-input" placeholder="4-digit code" maxlength="4" style="width: 140px; text-align: center;">
+                                        <button onclick="completeDonation('${d._id}')" class="btn btn-primary" style="padding: 0.5rem 1.5rem;">Verify</button>
+                                    </div>
+                                    <p id="error-${d._id}" style="color: var(--error); font-size: 0.75rem; margin-top: 0.5rem; display: none;"></p>
+                                </div>
+                            ` : ''}
+                            
+                            ${isCompleted ? `
+                                <div style="margin-top: var(--space-md); color: var(--success); font-weight: 700; display: flex; align-items: center; gap: 0.5rem;">
+                                    <span>✓</span> Verified and Distributed
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+        }).join('');
+      } catch (err) {
+        container.innerHTML = `<div class="card text-center" style="color: var(--error);"><p>${err.message}</p></div>`;
+      }
     }
 
-    errorEl.style.display = "none";
+    async function completeDonation(id) {
+      const codeInput = document.getElementById(`code-${id}`);
+      const errorEl = document.getElementById(`error-${id}`);
+      const code = codeInput.value.trim();
 
-    try {
-      const res = await fetch(`/api/donations/${id}/complete`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-user-id": user.email
-        },
-        body: JSON.stringify({ code })
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        errorEl.textContent = data.error || "Failed to complete donation";
+      if (!code || code.length !== 4) {
+        errorEl.textContent = "Enter 4-digit code";
         errorEl.style.display = "block";
         return;
       }
 
-      notify("Donation completed successfully! ✓");
-      loadMyDonations();
-    } catch (err) {
-      errorEl.textContent = err.message || "An error occurred";
-      errorEl.style.display = "block";
-    }
-  }
+      try {
+        const res = await fetch(`/api/donations/${id}/complete`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-user-id": user.email
+          },
+          body: JSON.stringify({ code })
+        });
 
-  document.getElementById("donation-form").addEventListener("submit", async (e) => {
-    e.preventDefault();
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Failed to complete");
 
-    const user = getCurrentUser();
-    if (!user || !user.email) {
-      notify("Please login first", "error");
-      return;
-    }
-
-    const data = {
-      foodCategory: foodCategory.value,
-      foodName: foodName.value,
-      quantity: Number(quantity.value),
-      unit: unit.value,
-      expiryDate: expiryDate.value,
-      storageType: storageType.value,
-      condition: condition.value,
-      pickupStartDate: pickupStartDate.value,
-      pickupEndDate: pickupEndDate.value,
-      donorContact: user.phone || "",
-      donorAddress: user.address || ""
-    };
-
-    try {
-      const res = await fetch("/api/donations", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-user-id": user.email
-        },
-        body: JSON.stringify(data)
-      });
-
-      const result = await res.json();
-      if (!res.ok) throw new Error(result.error || "Failed");
-
-      notify("Donation published successfully 🎉");
-      e.target.reset();
-      
-      // Refresh my donations if on that tab
-      if (currentTab === "my-donations") {
+        alert("Donation completed! Thank you for sharing. 🎉");
         loadMyDonations();
+      } catch (err) {
+        errorEl.textContent = err.message;
+        errorEl.style.display = "block";
       }
-    } catch (err) {
-      notify(err.message, "error");
     }
-  });
-</script>
 
+    document.getElementById("donation-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const btn = e.target.querySelector('button[type="submit"]');
+      btn.disabled = true;
+      btn.textContent = 'Publishing...';
+
+      const fd = new FormData(e.target);
+      const data = Object.fromEntries(fd.entries());
+      data.donorContact = user.phone || "";
+      data.donorAddress = user.address || "";
+
+      try {
+        const res = await fetch("/api/donations", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-user-id": user.email
+          },
+          body: JSON.stringify(data)
+        });
+
+        const result = await res.json();
+        if (!res.ok) throw new Error(result.error || "Failed");
+
+        alert("Donation published successfully! 🥗");
+        e.target.reset();
+        switchTab('history');
+      } catch (err) {
+        alert(err.message);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Publish Donation';
+      }
+    });
+  </script>
 </body>
+
 </html>

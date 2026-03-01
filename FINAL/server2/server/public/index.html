@@ -1,242 +1,230 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plate2Plate - Connect Food Providers with Those in Need</title>
+    <title>Plate2Plate - Sustainable Food Sharing for a Better Tomorrow</title>
     <link rel="icon" href="/logo.svg" type="image/svg+xml">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Fjalla+One&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sora:wght@700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/globals.css">
     <style>
-        :root {
-            --bg: #F9F9F9;
-            --text: #212121;
-            --muted: #757575;
-            --green: #1B5E20;
-            --green-dark: #0D3F10;
-            --green-ghost: #E8F5E9;
-            --border: #E0E0E0;
-            --card: #ffffff;
-            --accent: #CDDC39;
-            --orange: #FF7043;
-        }
-        
         body {
-            font-family: 'Quicksand', ui-sans-serif, system-ui;
-            margin: 0;
-            padding: 0;
-            background-color: var(--bg);
-            color: var(--text);
-            font-weight: 500;
-            min-height: 100vh;
+            scroll-behavior: smooth;
         }
-        
-        .hero {
-            background: linear-gradient(135deg, var(--green-ghost), #FFFBF0);
-            padding: 80px 24px;
-            text-align: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-        
-        .logo {
-            width: 180px;
-            height: 180px;
-            margin: 0 auto 20px;
-            animation: float 3s ease-in-out infinite;
-        }
-        
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-            100% { transform: translateY(0px); }
-        }
-        
-        h1 {
-            font-family: 'Fjalla One', sans-serif;
-            font-size: 48px;
-            margin: 0;
-            color: var(--green);
-            letter-spacing: 1px;
-        }
-        
-        .motto {
-            font-size: 20px;
-            margin: 16px 0 40px;
-            color: var(--green-dark);
-            font-weight: 600;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 40px 24px;
-        }
-        
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 24px;
-            margin-bottom: 40px;
-        }
-        
-        .feature {
-            background: var(--card);
-            border-radius: 12px;
-            padding: 24px;
-            text-align: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        
-        .feature:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-        }
-        
-        .feature img {
-            width: 100px;
-            height: 100px;
-            margin-bottom: 16px;
-        }
-        
-        .feature h3 {
-            margin: 0 0 12px;
-            color: var(--green);
-        }
-        
-        .feature p {
-            margin: 0;
-            color: var(--muted);
-            line-height: 1.6;
-        }
-        
-        .cta {
+
+        .hero-section {
+            position: relative;
+            padding: var(--space-2xl) 0;
+            background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%);
+            overflow: hidden;
+            min-height: 85vh;
             display: flex;
-            justify-content: center;
-            gap: 16px;
-            margin-top: 40px;
+            align-items: center;
         }
-        
-        .btn {
-            background: var(--green);
-            color: white;
-            border: none;
-            padding: 14px 28px;
-            border-radius: 8px;
-            font-weight: 700;
-            font-family: 'Quicksand', sans-serif;
-            cursor: pointer;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            text-decoration: none;
-            font-size: 16px;
-            letter-spacing: 0.5px;
-            box-shadow: 0 4px 12px rgba(27,94,32,0.2);
+
+        .hero-content {
+            z-index: 2;
+            position: relative;
         }
-        
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 16px rgba(27,94,32,0.3);
+
+        .hero-title {
+            font-family: 'Sora', sans-serif;
+            font-size: clamp(2.5rem, 5vw, 4.5rem);
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: var(--space-md);
         }
-        
-        .btn.secondary {
-            background: var(--orange);
-            box-shadow: 0 4px 12px rgba(255,112,67,0.2);
+
+        .hero-description {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin-bottom: var(--space-xl);
         }
-        
-        .btn.secondary:hover {
-            box-shadow: 0 6px 16px rgba(255,112,67,0.3);
+
+        .hero-image {
+            position: absolute;
+            right: -5%;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 45%;
+            border-radius: var(--radius-2xl);
+            box-shadow: var(--shadow-xl);
+            z-index: 1;
         }
-        
-        .footer {
+
+        .stats-banner {
+            background: var(--surface);
+            padding: var(--space-xl) 0;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .stat-card {
             text-align: center;
-            padding: 24px;
-            background: var(--green-ghost);
-            color: var(--muted);
-            margin-top: 40px;
         }
-        
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 36px;
+
+        .stat-val {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .feature-card {
+            height: 100%;
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: var(--space-md);
+            display: block;
+        }
+
+        @media (max-width: 1024px) {
+            .hero-image {
+                position: relative;
+                right: 0;
+                top: 0;
+                transform: none;
+                width: 100%;
+                margin-top: var(--space-xl);
             }
-            
-            .motto {
-                font-size: 18px;
+
+            .hero-section {
+                padding: var(--space-xl) 0;
+                text-align: center;
             }
-            
-            .logo {
-                width: 140px;
-                height: 140px;
-            }
-            
-            .features {
-                grid-template-columns: 1fr;
+
+            .hero-description {
+                margin: 0 auto var(--space-xl);
             }
         }
     </style>
 </head>
+
 <body>
-    <div class="hero">
-        <img src="/logo.svg" alt="Plate2Plate Logo" class="logo">
-        <h1>Plate2Plate</h1>
-        <p class="motto">Every Plate MATTERS - Connecting Food Providers with Those in Need</p>
-        <div class="cta">
-            <a href="/auth.html" class="btn secondary">Sign Up</a>
-        </div>
-    </div>
-    
-    <div class="container">
-        <div class="features">
-            <div class="feature">
-                <img src="/images/images.jpeg" alt="Provide Food">
-                <h3>Provide Surplus Food</h3>
-                <p>List your surplus food items and help reduce food waste while supporting those in need.</p>
-            </div>
-            <div class="feature">
-                <img src="/images/images 02.jpeg" alt="Receive Food">
-                <h3>Receive Available Food</h3>
-                <p>Browse available food listings and request items that would otherwise go to waste.</p>
-            </div>
-            <div class="feature">
-                <img src="/images/events.svg" alt="Campus Events">
-                <h3>Campus Events</h3>
-                <p>Organize and discover campus events where food sharing and sustainability are promoted.</p>
+    <nav class="navbar">
+        <div class="container flex items-center justify-between">
+            <a href="/" class="flex items-center gap-sm">
+                <img src="/logo.svg" alt="Logo" width="40" height="40">
+                <span
+                    style="font-family: 'Sora', sans-serif; font-weight: 800; font-size: 1.5rem; color: var(--primary);">Plate2Plate</span>
+            </a>
+            <div class="flex items-center gap-lg">
+                <a href="/auth.html" class="nav-link">Login</a>
+                <a href="/auth.html" class="btn btn-primary">Join Now</a>
             </div>
         </div>
-        
-        <div class="features">
-            <div class="feature">
-                <img src="/images/provider-banner.svg" alt="For Providers">
-                <h3>For Food Providers</h3>
-                <p>Restaurants, cafeterias, and individuals with surplus food can easily list available items and track their impact.</p>
+    </nav>
+
+    <main>
+        <section class="hero-section">
+            <div class="container">
+                <div class="hero-content animate-fade-in">
+                    <h1 class="hero-title">Every Plate <br>Matters.</h1>
+                    <p class="hero-description">Connecting surplus food providers with those in need. Join our
+                        community-driven movement to reduce waste and nourish our campus.</p>
+                    <div class="flex gap-md">
+                        <a href="/auth.html" class="btn btn-primary btn-lg">Start Donating</a>
+                        <a href="#how-it-works" class="btn btn-secondary btn-lg">How it Works</a>
+                    </div>
+                </div>
+                <img src="/images/hero-premium.png" alt="Sustainble Food Sharing" class="hero-image animate-float">
             </div>
-            <div class="feature">
-                <img src="/images/receiver-banner.svg" alt="For Receivers">
-                <h3>For Food Receivers</h3>
-                <p>Students, community members, and organizations can find and request available food items in their area.</p>
+        </section>
+
+        <section id="how-it-works" class="container" style="padding: var(--space-2xl) 0;">
+            <div style="text-align: center; margin-bottom: var(--space-2xl);">
+                <h2 style="font-size: 2.5rem;">A Simple Way to Share</h2>
+                <p style="color: var(--text-muted);">Making an impact has never been easier.</p>
             </div>
-            <div class="feature">
-                <img src="/images/analytics.svg" alt="Impact Analytics">
-                <h3>Track Your Impact</h3>
-                <p>See how your contributions help reduce food waste and environmental impact with detailed analytics.</p>
+            <div class="grid grid-cols-3 gap-lg">
+                <div class="card feature-card">
+                    <span class="feature-icon">🥕</span>
+                    <h3>List Surplus</h3>
+                    <p>Post available food items from canteens, events, or your kitchen in seconds.</p>
+                </div>
+                <div class="card feature-card">
+                    <span class="feature-icon">🔔</span>
+                    <h3>Get Notified</h3>
+                    <p>Receivers get real-time alerts for available food nearby.</p>
+                </div>
+                <div class="card feature-card">
+                    <span class="feature-icon">🤝</span>
+                    <h3>Cooridinated Pickup</h3>
+                    <p>Schedule a quick pickup and help reduce food waste instantly.</p>
+                </div>
+            </div>
+        </section>
+
+        <section style="background-color: var(--primary-light); padding: var(--space-2xl) 0;">
+            <div class="container">
+                <div class="grid grid-cols-2 items-center gap-2xl">
+                    <div>
+                        <h2 style="font-size: 2.5rem;">Join the sustainable movement on campus</h2>
+                        <p style="font-size: 1.125rem; color: var(--text-muted); margin-bottom: var(--space-xl);">We're
+                            building a smarter, kinder way to manage surplus food. Whether you're a provider or a
+                            receiver, your contribution counts.</p>
+                        <div class="flex flex-col gap-md">
+                            <div class="flex items-center gap-md">
+                                <span style="color: var(--primary); font-size: 1.5rem;">✓</span>
+                                <div>
+                                    <strong>Real-time Updates</strong>
+                                    <p>Stay informed about new listings as they happen.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-md">
+                                <span style="color: var(--primary); font-size: 1.5rem;">✓</span>
+                                <div>
+                                    <strong>Verified Community</strong>
+                                    <p>Safe and reliable sharing within our campus network.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <img src="/images/logo-premium.png" alt="Community"
+                            style="border-radius: var(--radius-2xl); box-shadow: var(--shadow-xl);">
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="flex flex-col items-center gap-md">
+                <img src="/logo.svg" alt="Plate2Plate Logo" width="60">
+                <h2 style="margin: 0;">Plate2Plate</h2>
+                <p>Nourishing communities, one plate at a time.</p>
+                <div class="flex gap-lg" style="margin-top: var(--space-md);">
+                    <a href="#" class="nav-link">About Us</a>
+                    <a href="#" class="nav-link">Contact</a>
+                    <a href="#" class="nav-link">Terms</a>
+                    <a href="#" class="nav-link">Privacy</a>
+                </div>
+                <p style="font-size: 0.875rem; margin-top: var(--space-xl);">© 2026 Plate2Plate. All rights reserved.
+                </p>
             </div>
         </div>
-    </div>
-    
-    <div class="footer">
-        <p>Plate2Plate - Built for a sustainable campus</p>
-    </div>
+    </footer>
 
     <script>
         // Check if user is already logged in
         window.addEventListener('load', () => {
             const user = localStorage.getItem('plate2plate_user');
-            // If user is already logged in, redirect to dashboard
             if (user) {
                 window.location.href = '/dashboard.html';
             }
         });
     </script>
 </body>
+
 </html>

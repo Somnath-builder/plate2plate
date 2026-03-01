@@ -1,361 +1,268 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Plate2Plate</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Plate2Plate</title>
   <link rel="icon" href="/logo.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Fjalla+One&display=swap"
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sora:wght@700;800&display=swap"
     rel="stylesheet">
+  <link rel="stylesheet" href="/globals.css">
   <style>
-    :root {
-      --bg: #F9F9F9;
-      --text: #212121;
-      --muted: #757575;
-      --green: #1B5E20;
-      /* primary */
-      --green-dark: #0D3F10;
-      --green-ghost: #e6f4ea;
-      --border: #E0E0E0;
-      --accent: #CDDC39;
-      --orange: #FF7043;
-    }
-
-    body {
-      font-family: 'Quicksand', ui-sans-serif, system-ui;
-      margin: 0;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      font-weight: 500;
-    }
-
-    .hero {
-      text-align: center;
-      padding: 70px 24px 50px;
-      background: linear-gradient(to bottom, var(--accent), #E6EE9C);
+    .dashboard-header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      color: white;
+      padding: var(--space-2xl) 0;
       border-bottom: none;
-      position: relative;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
 
-    .brand {
+    .user-badge {
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(4px);
+      padding: var(--space-sm) var(--space-md);
+      border-radius: var(--radius-full);
+      font-size: 0.875rem;
+      font-weight: 600;
       display: flex;
       align-items: center;
-      justify-content: center;
-      gap: 16px;
-      margin-bottom: 12px;
+      gap: var(--space-sm);
     }
 
-    .brand img {
-      height: 120px;
-      width: auto;
-      object-fit: contain;
-    }
-
-    .hero h1 {
-      font-size: 44px;
-      font-weight: 800;
-      margin: 0 0 12px;
-      color: var(--text);
-      font-family: 'Fjalla One', sans-serif;
-      letter-spacing: 0.5px;
-    }
-
-    .hero p {
-      font-family: 'Poppins', Inter, ui-sans-serif, system-ui;
-      font-weight: 800;
-      font-size: 22px;
-      color: var(--text);
-      margin: 0 0 28px;
-      letter-spacing: .3px;
-      line-height: 1.6;
-    }
-
-    .options {
+    .stat-grid-modern {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 24px;
-      max-width: 900px;
-      margin: 24px auto 0;
-      padding: 0 24px;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-lg);
+      margin-top: calc(-1 * var(--space-xl));
     }
 
-    .option-card {
-      background: #ffffff;
-      border: none;
-      border-radius: 16px;
-      padding: 36px 32px;
+    .stat-card {
+      background: var(--surface);
+      padding: var(--space-xl);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-lg);
       text-align: center;
-      transition: all 0.3s ease;
-      cursor: pointer;
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
-    }
-
-    .option-card:hover {
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
-      transform: translateY(-4px);
-      border-left: 4px solid var(--green);
-    }
-
-    .option-icon {
-      font-size: 42px;
-      margin-bottom: 14px;
-      display: block;
-    }
-
-    .option-image {
-      width: 100%;
-      max-width: 260px;
-      height: auto;
-      margin: 8px auto 14px;
-      display: block;
-      border-radius: 12px;
       border: 1px solid var(--border);
-      background: #fff;
+      animation: fadeIn var(--transition-normal) forwards;
     }
 
-    .option-card h3 {
-      font-size: 22px;
-      margin: 0 0 10px;
-      color: var(--text);
+    .stat-icon {
+      font-size: 2rem;
+      margin-bottom: var(--space-sm);
+      display: block;
     }
 
-    .option-card p {
-      color: var(--muted);
-      margin: 0 0 18px;
-      line-height: 1.6;
-    }
-
-    .btn-primary {
-      background: var(--green);
-      color: #fff;
-      border: none;
-      padding: 14px 28px;
-      border-radius: 12px;
-      cursor: pointer;
-      font-weight: 700;
-      font-size: 16px;
-      transition: all 0.3s ease;
-      text-decoration: none;
-      display: inline-block;
-      font-family: 'Quicksand', sans-serif;
-      letter-spacing: 0.5px;
-      text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
-      box-shadow: 0 4px 12px rgba(27, 94, 32, 0.2);
-    }
-
-    .btn-primary:hover {
-      background: var(--green-dark);
-      transform: translateY(-2px);
-      box-shadow: 0 6px 16px rgba(27, 94, 32, 0.25);
-    }
-
-    .stats {
-      background: #fff;
-      padding: 50px 24px;
-      margin-top: 48px;
-      border-top: none;
-      box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.06);
-    }
-
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 24px;
-      max-width: 1000px;
-      margin: 0 auto;
-    }
-
-    .stat-item {
-      text-align: center;
-    }
-
-    .stat-number {
-      font-size: 32px;
-      font-weight: 700;
-      color: var(--green);
-      margin-bottom: 4px;
+    .stat-value {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--primary);
+      line-height: 1;
+      margin-bottom: var(--space-xs);
     }
 
     .stat-label {
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    .footer {
-      text-align: center;
-      color: var(--muted);
-      padding: 32px 24px;
-      border-top: 1px solid var(--border);
-    }
-
-    #user-info {
-      color: var(--muted);
-    }
-
-    #user-info .name {
-      color: var(--green-dark);
+      color: var(--text-muted);
       font-weight: 600;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
     }
 
-    #user-info button {
+    .action-card {
+      padding: var(--space-2xl);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: var(--space-md);
+      height: 100%;
+    }
+
+    .action-icon {
+      width: 80px;
+      height: 80px;
+      background: var(--primary-light);
+      border-radius: var(--radius-2xl);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      margin-bottom: var(--space-md);
+    }
+
+    .logout-btn {
+      background: rgba(239, 68, 68, 0.1);
+      color: #ef4444;
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius-md);
+      font-weight: 600;
+      transition: all var(--transition-fast);
+    }
+
+    .logout-btn:hover {
       background: #ef4444;
-      color: #fff;
-      border: none;
-      padding: 4px 8px;
-      border-radius: 4px;
-      font-size: 12px;
-      cursor: pointer;
+      color: white;
     }
 
     @media (max-width: 768px) {
-      .hero h1 {
-        font-size: 34px;
-      }
-
-      .hero p {
-        font-size: 18px;
-      }
-
-      .options {
+      .stat-grid-modern {
         grid-template-columns: 1fr;
+        margin-top: var(--space-md);
       }
     }
   </style>
 </head>
 
 <body>
-  <div class="hero">
-    <div style="position: absolute; top: 16px; right: 16px;" id="user-info"></div>
-    <div class="brand">
-      <img src="/logo.svg" alt="Plate2Plate Logo" width="120" height="120">
-      <h1>Plate2Plate</h1>
+  <nav class="navbar">
+    <div class="container flex items-center justify-between">
+      <a href="/" class="flex items-center gap-sm">
+        <img src="/logo.svg" alt="Logo" width="32" height="32">
+        <span
+          style="font-family: 'Sora', sans-serif; font-weight: 800; font-size: 1.25rem; color: var(--primary);">Plate2Plate</span>
+      </a>
+      <div id="user-nav" class="flex items-center gap-md">
+        <!-- Populated by JS -->
+      </div>
     </div>
-    <p><strong>Every Plate MATTERS</strong></p>
-  </div>
+  </nav>
 
-  <div class="options">
-    <div class="option-card" onclick="window.location.href='/provider.html'">
-      <span class="option-icon">🧑‍🍳</span>
-      <img class="option-image" src="/images/images.jpeg" alt="Provide surplus food"
-        onerror="this.style.display='none'">
-      <h3>Provide Food</h3>
-      <p>Are you a canteen, hostel, or event organizer with surplus food? List it here and help reduce waste while
-        serving your community.</p>
-      <a href="/provider.html" class="btn-primary">Start Providing</a>
+  <header class="dashboard-header">
+    <div class="container">
+      <h1 style="color: white; margin-bottom: var(--space-xs); font-family: 'Sora', sans-serif;">Welcome Back!</h1>
+      <p style="color: rgba(255,255,255,0.8); font-size: 1.125rem;">Together, we're making a measurable difference.</p>
     </div>
+  </header>
 
-    <div class="option-card" onclick="window.location.href='/receiver.html'">
-      <span class="option-icon">🥡</span>
-      <img class="option-image" src="/images/images 02.jpeg" alt="Receive surplus food"
-        onerror="this.style.display='none'">
-      <h3>Receive Food</h3>
-      <p>Looking for available food? Browse listings, get real-time notifications, and coordinate pickups to receive
-        surplus food.</p>
-      <a href="/receiver.html" class="btn-primary">Start Receiving</a>
-    </div>
-  </div>
-
-  <div class="stats">
-    <div class="stats-grid">
-      <div class="stat-item">
-        <div class="stat-number" id="totalListings">0</div>
+  <main class="container" style="padding-bottom: var(--space-2xl);">
+    <!-- Impact Section -->
+    <div class="stat-grid-modern">
+      <div class="stat-card">
+        <span class="stat-icon">🍲</span>
+        <div class="stat-value" id="totalListings">0</div>
         <div class="stat-label">Total Listings</div>
       </div>
-      <div class="stat-item">
-        <div class="stat-number" id="foodSaved">0</div>
+      <div class="stat-card" style="animation-delay: 0.1s;">
+        <span class="stat-icon">⚖️</span>
+        <div class="stat-value" id="foodSaved">0</div>
         <div class="stat-label">Kg Food Saved</div>
       </div>
-      <div class="stat-item">
-        <div class="stat-number" id="peopleServed">0</div>
+      <div class="stat-card" style="animation-delay: 0.2s;">
+        <span class="stat-icon">👥</span>
+        <div class="stat-value" id="peopleServed">0</div>
         <div class="stat-label">People Served</div>
       </div>
     </div>
-  </div>
 
-  <div class="footer">
-    <p>Built for a sustainable campus • Plate2Plate</p>
-  </div>
+    <!-- Main Actions -->
+    <div style="margin-top: var(--space-2xl);">
+      <h2 style="margin-bottom: var(--space-lg);">What would you like to do today?</h2>
+      <div class="grid grid-cols-2 gap-lg">
+        <div class="card action-card" onclick="window.location.href='/provider.html'">
+          <div class="action-icon">🧑‍🍳</div>
+          <h3>Provide Food</h3>
+          <p style="color: var(--text-muted);">Have surplus food from an event or canteen? List it now to find someone
+            in need.</p>
+          <a href="/provider.html" class="btn btn-primary" style="width: 100%;">Share Surplus</a>
+        </div>
 
+        <div class="card action-card" onclick="window.location.href='/receiver.html'">
+          <div class="action-icon">🥡</div>
+          <h3>Receive Food</h3>
+          <p style="color: var(--text-muted);">Looking for available food nearby? Browse current listings and coordinate
+            a pickup.</p>
+          <a href="/receiver.html" class="btn btn-secondary" style="width: 100%;">Find Food</a>
+        </div>
+      </div>
+    </div>
+  </main>
 
+  <footer>
+    <div class="container">
+      <p>© 2026 Plate2Plate • Built for a sustainable campus</p>
+    </div>
+  </footer>
 
   <script>
-    // Check if user is logged in
     function checkLogin() {
       const userData = localStorage.getItem('plate2plate_user');
       if (!userData) {
-        // User not logged in, redirect to auth page
         window.location.href = '/auth.html';
-        return false;
+        return null;
       }
-      return true;
+      return JSON.parse(userData);
     }
 
-    // Display user info
-    function displayUserInfo() {
-      const userData = localStorage.getItem('plate2plate_user');
-      if (userData) {
-        const user = JSON.parse(userData);
-        const userInfo = document.getElementById('user-info');
-        if (userInfo) {
-          userInfo.innerHTML = `
-              <div style="display: flex; align-items: center; gap: 8px;">
-                <span>Welcome,</span>
-                <span class="name">${user.name}</span>
-                <button onclick="logout()">Logout</button>
-              </div>
-            `;
-        }
+    function displayUserInfo(user) {
+      const userNav = document.getElementById('user-nav');
+      if (userNav) {
+        userNav.innerHTML = `
+                    <div class="flex items-center gap-md">
+                        <div class="user-badge" style="color: var(--text);">
+                            <span>👋</span>
+                            <span>${user.name}</span>
+                        </div>
+                        <button onclick="logout()" class="logout-btn">Logout</button>
+                    </div>
+                `;
       }
     }
 
-    // Logout function
     function logout() {
       localStorage.removeItem('plate2plate_user');
       window.location.href = '/auth.html';
     }
 
-    // Load basic stats for the landing page
     async function loadStats() {
-      console.log('Attempting to load stats...');
       try {
         const response = await fetch('/api/analytics');
-        if (!response.ok) {
-          throw new Error(`API returned ${response.status}`);
-        }
+        if (!response.ok) throw new Error(`API returned ${response.status}`);
         const data = await response.json();
-        console.log('Analytics data received:', data);
 
-        if (data.totals && document.getElementById('totalListings')) {
-          document.getElementById('totalListings').textContent = data.totals.totalListings || 0;
-          document.getElementById('peopleServed').textContent = data.totals.pickupsCount || 0;
-        }
+        // Animate numbers
+        animateValue('totalListings', 0, data.totals.totalListings || 0, 1000);
+        animateValue('foodSaved', 0, data.impact.kgSaved || 0, 1000);
+        animateValue('peopleServed', 0, data.totals.pickupsCount || 0, 1000);
 
-        if (data.impact && document.getElementById('foodSaved')) {
-          document.getElementById('foodSaved').textContent = data.impact.kgSaved || 0;
-        }
       } catch (error) {
         console.error('Stats loading failed:', error);
       }
     }
 
-    // Initialize page
+    function animateValue(id, start, end, duration) {
+      const obj = document.getElementById(id);
+      if (!obj) return;
+
+      const range = end - start;
+      let current = start;
+      const increment = end > start ? 1 : -1;
+      const stepTime = Math.abs(Math.floor(duration / range));
+
+      if (range === 0) {
+        obj.textContent = end;
+        return;
+      }
+
+      const timer = setInterval(() => {
+        current += increment;
+        obj.textContent = current;
+        if (current == end) {
+          clearInterval(timer);
+        }
+      }, stepTime);
+    }
+
     window.addEventListener('load', () => {
-      if (checkLogin()) {
-        displayUserInfo();
+      const user = checkLogin();
+      if (user) {
+        displayUserInfo(user);
         loadStats();
-      } else {
-        window.location.href = '/auth.html';
       }
     });
-
-
   </script>
 </body>
 

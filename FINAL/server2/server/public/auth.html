@@ -1,200 +1,271 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Login/Signup - Plate2Plate</title>
-    <link rel="icon" href="/logo.svg" type="image/svg+xml">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Fjalla+One&display=swap" rel="stylesheet">
-    <style>
-      :root { --bg:#F9F9F9; --text:#212121; --muted:#757575; --green:#1B5E20; --green-dark:#0D3F10; --border:#E0E0E0; --ghost:#e6f4ea; --accent:#CDDC39; --orange:#FF7043; }
-      body { font-family: 'Quicksand', ui-sans-serif, system-ui; margin: 0; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; align-items: center; justify-content: center; font-weight: 500; }
-      .auth-container { background: #fff; border: none; border-radius: 20px; padding: 36px; width: 100%; max-width: 520px; box-shadow: 0 15px 40px rgba(0,0,0,0.1); transition: all 0.3s ease; }
-      .logo { text-align: center; margin-bottom: 20px; }
-      .logo img { height: 56px; margin-bottom: 8px; }
-      .logo h1 { font-family: 'Fjalla One', sans-serif; font-size: 28px; margin: 0 0 6px; letter-spacing: 0.5px; }
-      .logo p { color: var(--muted); margin: 0; font-size: 14px; }
-      .tabs { display: flex; margin: 16px 0 24px; border-bottom: 1px solid var(--border); }
-      .tab { flex: 1; padding: 14px 24px; background: none; border: none; color: var(--muted); font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; border-bottom: 3px solid transparent; font-family: 'Quicksand', sans-serif; letter-spacing: 0.5px; }
-      .tab.active { color: var(--green-dark); border-bottom-color: var(--green); }
-      .tab:hover { color: var(--text); }
-      .form-group { margin-bottom: 16px; }
-      label { display:block; font-size: 13px; color: var(--muted); margin-bottom:6px; font-weight: 600; }
-      input, select { width:100%; padding:14px 18px; border-radius:12px; border:1px solid var(--border); background:#fff; color: var(--text); font-size: 15px; box-sizing: border-box; font-family: 'Quicksand', sans-serif; transition: all 0.3s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-      input:focus, select:focus { outline:none; border-color: var(--green); box-shadow: 0 0 0 3px rgba(15,157,88,0.15); }
-      .btn { width: 100%; background: var(--green); color:#fff; border:none; padding: 14px 18px; border-radius:12px; cursor:pointer; font-weight:700; font-size:16px; transition: all 0.3s ease; margin-top: 16px; font-family: 'Quicksand', sans-serif; letter-spacing: 0.5px; text-shadow: 0 1px 1px rgba(0,0,0,0.2); box-shadow: 0 4px 12px rgba(27,94,32,0.2); }
-      .btn:hover { background: var(--green-dark); transform: translateY(-2px); box-shadow: 0 6px 16px rgba(27,94,32,0.25); }
-      .error { color: #dc2626; font-size: 14px; margin-top: 8px; display: none; }
-      .success { color: var(--green-dark); font-size: 14px; margin-top: 8px; display: none; }
-      .required { color: #dc2626; }
-      .form-section { display: none; }
-      .form-section.active { display: block; }
-      .forgot-password { text-align: center; margin-top: 12px; }
-      .forgot-password a { color: var(--green-dark); text-decoration: none; font-size: 14px; }
-      .forgot-password a:hover { text-decoration: underline; }
-    </style>
-  </head>
-  <body>
-    <div class="auth-container">
-      <div class="logo">
-        <img src="/logo.svg" alt="Plate2Plate Logo" width="120" height="120" />
-        <h1>Plate2Plate</h1>
-        <p>Connect surplus food providers with those who need it</p>
-      </div>
-      <div class="tabs">
-        <button class="tab active" data-tab="login">Login</button>
-        <button class="tab" data-tab="signup">Sign Up</button>
-      </div>
-      <div id="login-form" class="form-section active">
-        <form id="login-form-element">
-          <div class="form-group">
-            <label for="login-email">Email Address <span class="required">*</span></label>
-            <input type="email" id="login-email" name="email" required placeholder="Enter your email address">
-          </div>
-          <div class="form-group">
-            <label for="login-password">Password <span class="required">*</span></label>
-            <input type="password" id="login-password" name="password" required placeholder="Enter your password">
-          </div>
-          <button type="submit" class="btn" id="login-btn">Login to Plate2Plate</button>
-        </form>
-        <div class="forgot-password">
-          <a href="#" onclick="alert('Contact support to reset your password')">Forgot Password?</a>
-        </div>
-      </div>
-      <div id="signup-form" class="form-section">
-        <form id="signup-form-element">
-          <div class="form-group">
-            <label for="signup-name">Full Name <span class="required">*</span></label>
-            <input type="text" id="signup-name" name="name" required placeholder="Enter your full name">
-          </div>
-          <div class="form-group">
-            <label for="signup-email">Email Address <span class="required">*</span></label>
-            <input type="email" id="signup-email" name="email" required placeholder="Enter your email address">
-          </div>
-          <div class="form-group">
-            <label for="signup-password">Password <span class="required">*</span></label>
-            <input type="password" id="signup-password" name="password" required placeholder="Create a password">
-          </div>
-          <div class="form-group">
-            <label for="signup-confirm-password">Confirm Password <span class="required">*</span></label>
-            <input type="password" id="signup-confirm-password" name="confirmPassword" required placeholder="Confirm your password">
-          </div>
-          <div class="form-group">
-            <label for="signup-address">Address <span class="required">*</span></label>
-            <input type="text" id="signup-address" name="address" required placeholder="Enter your full address">
-          </div>
-          <div class="form-group">
-            <label for="signup-phone">Phone Number <span class="required">*</span></label>
-            <input type="tel" id="signup-phone" name="phone" required placeholder="Enter your phone number">
-          </div>
-          <button type="submit" class="btn" id="signup-btn">Create Account</button>
-        </form>
-      </div>
-      <div id="error-message" class="error"></div>
-      <div id="success-message" class="success"></div>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login / Sign Up - Plate2Plate</title>
+  <link rel="icon" href="/logo.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sora:wght@700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="/globals.css">
+  <style>
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, var(--primary-light) 0%, #ffffff 100%);
+    }
+
+    .auth-card {
+      width: 100%;
+      max-width: 480px;
+      animation: fadeIn var(--transition-normal) forwards;
+    }
+
+    .tabs {
+      display: flex;
+      margin-bottom: var(--space-lg);
+      border-bottom: 2px solid var(--border);
+    }
+
+    .tab {
+      flex: 1;
+      padding: var(--space-md);
+      text-align: center;
+      font-weight: 700;
+      color: var(--text-muted);
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+      transition: all var(--transition-normal);
+      background: none;
+      border: none;
+    }
+
+    .tab.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+
+    .form-section {
+      display: none;
+    }
+
+    .form-section.active {
+      display: block;
+      animation: fadeIn var(--transition-fast) forwards;
+    }
+
+    .auth-header {
+      text-align: center;
+      margin-bottom: var(--space-xl);
+    }
+
+    .auth-logo {
+      margin: 0 auto var(--space-md);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="auth-card card">
+    <div class="auth-header">
+      <a href="/" class="auth-logo flex items-center justify-center gap-sm">
+        <img src="/logo.svg" alt="Logo" width="48" height="48">
+        <span
+          style="font-family: 'Sora', sans-serif; font-weight: 800; font-size: 1.75rem; color: var(--primary);">Plate2Plate</span>
+      </a>
+      <p style="color: var(--text-muted);">Every Plate Matters. Join the movement.</p>
     </div>
 
-    <script>
-      // Tabs
-      const tabs = document.querySelectorAll('.tab');
-      const formSections = document.querySelectorAll('.form-section');
-      tabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-          const targetTab = tab.dataset.tab;
-          tabs.forEach(t => t.classList.remove('active'));
-          tab.classList.add('active');
-          formSections.forEach(section => {
-            section.classList.remove('active');
-            if (section.id === `${targetTab}-form`) section.classList.add('active');
-          });
-          hideMessages();
+    <div class="tabs">
+      <button class="tab active" data-tab="login">Login</button>
+      <button class="tab" data-tab="signup">Sign Up</button>
+    </div>
+
+    <div id="login-form" class="form-section active">
+      <form id="login-form-element">
+        <div class="form-group">
+          <label class="form-label" for="login-email">Email Address</label>
+          <input type="email" id="login-email" name="email" class="form-input" required placeholder="name@example.com">
+        </div>
+        <div class="form-group">
+          <div class="flex justify-between items-center" style="margin-bottom: var(--space-xs);">
+            <label class="form-label" for="login-password" style="margin-bottom: 0;">Password</label>
+            <a href="#" class="nav-link" style="font-size: 0.75rem;"
+              onclick="alert('Contact support to reset your password')">Forgot?</a>
+          </div>
+          <input type="password" id="login-password" name="password" class="form-input" required placeholder="••••••••">
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%;" id="login-btn">Sign In</button>
+      </form>
+    </div>
+
+    <div id="signup-form" class="form-section">
+      <form id="signup-form-element">
+        <div class="form-group">
+          <label class="form-label" for="signup-name">Full Name</label>
+          <input type="text" id="signup-name" name="name" class="form-input" required placeholder="John Doe">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="signup-email">Email Address</label>
+          <input type="email" id="signup-email" name="email" class="form-input" required placeholder="john@example.com">
+        </div>
+        <div class="grid grid-cols-2 gap-md">
+          <div class="form-group">
+            <label class="form-label" for="signup-password">Password</label>
+            <input type="password" id="signup-password" name="password" class="form-input" required
+              placeholder="••••••••">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="signup-confirm-password">Confirm</label>
+            <input type="password" id="signup-confirm-password" name="confirmPassword" class="form-input" required
+              placeholder="••••••••">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="signup-address">Address</label>
+          <input type="text" id="signup-address" name="address" class="form-input" required
+            placeholder="Campus Block / Street">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="signup-phone">Phone Number</label>
+          <input type="tel" id="signup-phone" name="phone" class="form-input" required placeholder="+1 234 567 890">
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%;" id="signup-btn">Create Account</button>
+      </form>
+    </div>
+
+    <div id="error-message"
+      style="color: var(--error); font-size: 0.875rem; margin-top: var(--space-md); text-align: center; display: none;">
+    </div>
+    <div id="success-message"
+      style="color: var(--success); font-size: 0.875rem; margin-top: var(--space-md); text-align: center; display: none;">
+    </div>
+  </div>
+
+  <script>
+    // Tabs logic
+    const tabs = document.querySelectorAll('.tab');
+    const formSections = document.querySelectorAll('.form-section');
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const targetTab = tab.dataset.tab;
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        formSections.forEach(section => {
+          section.classList.remove('active');
+          if (section.id === `${targetTab}-form`) section.classList.add('active');
         });
+        hideMessages();
       });
+    });
 
-      // Elements
-      const loginForm = document.getElementById('login-form-element');
-      const signupForm = document.getElementById('signup-form-element');
-      const errorMessage = document.getElementById('error-message');
-      const successMessage = document.getElementById('success-message');
-      const loginBtn = document.getElementById('login-btn');
-      const signupBtn = document.getElementById('signup-btn');
+    const loginForm = document.getElementById('login-form-element');
+    const signupForm = document.getElementById('signup-form-element');
+    const errorMessage = document.getElementById('error-message');
+    const successMessage = document.getElementById('success-message');
+    const loginBtn = document.getElementById('login-btn');
+    const signupBtn = document.getElementById('signup-btn');
 
-      // Helpers
-      function validateEmail(email) {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email);
+    function showError(msg) {
+      errorMessage.textContent = msg;
+      errorMessage.style.display = 'block';
+      successMessage.style.display = 'none';
+    }
+
+    function showSuccess(msg) {
+      successMessage.textContent = msg;
+      successMessage.style.display = 'block';
+      errorMessage.style.display = 'none';
+    }
+
+    function hideMessages() {
+      errorMessage.style.display = 'none';
+      successMessage.style.display = 'none';
+    }
+
+    signupForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      hideMessages();
+      const fd = new FormData(signupForm);
+      const user = Object.fromEntries(fd.entries());
+
+      if (user.password !== user.confirmPassword) {
+        return showError('Passwords do not match');
       }
-      function validatePhone(phone) {
-        const phoneRegex = /^[\+]?\d[\d\s\-()]{5,}$/;
-        return phoneRegex.test(phone);
+      if (user.password.length < 6) {
+        return showError('Password must be at least 6 characters');
       }
-      function showError(msg){ errorMessage.textContent = msg; errorMessage.style.display='block'; successMessage.style.display='none'; }
-      function showSuccess(msg){ successMessage.textContent = msg; successMessage.style.display='block'; errorMessage.style.display='none'; }
-      function hideMessages(){ errorMessage.style.display='none'; successMessage.style.display='none'; }
 
-      // Signup
-      signupForm.addEventListener('submit', (e) => {
-        e.preventDefault(); hideMessages();
-        const fd = new FormData(signupForm);
-        const user = {
-          name: fd.get('name').trim(),
-          email: fd.get('email').trim(),
-          password: fd.get('password'),
-          confirmPassword: fd.get('confirmPassword'),
-          address: fd.get('address').trim(),
-          phone: fd.get('phone').trim()
-        };
-        if (!user.name) return showError('Please enter your full name');
-        if (!validateEmail(user.email)) return showError('Please enter a valid email');
-        if (!user.password || user.password.length < 6) return showError('Password must be at least 6 characters');
-        if (user.password !== user.confirmPassword) return showError('Passwords do not match');
-        if (!user.address) return showError('Please enter your address');
-        if (!validatePhone(user.phone)) return showError('Please enter a valid phone number');
-        signupBtn.disabled = true; signupBtn.textContent='Creating account...';
-        try {
-          const users = JSON.parse(localStorage.getItem('plate2plate_users')||'[]');
-          if (users.find(u=>u.email.toLowerCase()===user.email.toLowerCase())) {
-            showError('An account with this email already exists. Please login.');
-            return;
-          }
-          users.push({ name:user.name, email:user.email, password:user.password, address:user.address, phone:user.phone, createdAt: Date.now() });
-          localStorage.setItem('plate2plate_users', JSON.stringify(users));
-          localStorage.setItem('plate2plate_user', JSON.stringify({ name:user.name, email:user.email, address:user.address, phone:user.phone, loginTime: Date.now() }));
-          showSuccess('Account created! Redirecting...');
-          setTimeout(()=>{ window.location.href='/dashboard.html'; }, 1200);
-        } finally {
-          signupBtn.disabled = false; signupBtn.textContent='Create Account';
+      signupBtn.disabled = true;
+      signupBtn.textContent = 'Creating account...';
+
+      try {
+        const users = JSON.parse(localStorage.getItem('plate2plate_users') || '[]');
+        if (users.find(u => u.email.toLowerCase() === user.email.toLowerCase())) {
+          return showError('Email already registered');
         }
-      });
 
-      // Login
-      loginForm.addEventListener('submit', (e) => {
-        e.preventDefault(); hideMessages();
-        const fd = new FormData(loginForm);
-        const email = fd.get('email').trim();
-        const password = fd.get('password');
-        if (!validateEmail(email)) return showError('Please enter a valid email');
-        if (!password) return showError('Please enter your password');
-        loginBtn.disabled = true; loginBtn.textContent='Logging in...';
-        try {
-          const users = JSON.parse(localStorage.getItem('plate2plate_users')||'[]');
-          const user = users.find(u=>u.email.toLowerCase()===email.toLowerCase() && u.password===password);
-          if (!user) { showError('Invalid email or password'); return; }
-          localStorage.setItem('plate2plate_user', JSON.stringify({ name:user.name, email:user.email, address:user.address, phone:user.phone, loginTime: Date.now() }));
-          showSuccess('Login successful! Redirecting...');
-          setTimeout(()=>{ window.location.href='/dashboard.html'; }, 900);
-        } finally {
-          loginBtn.disabled = false; loginBtn.textContent='Login to Plate2Plate';
-        }
-      });
+        users.push({ ...user, createdAt: Date.now() });
+        localStorage.setItem('plate2plate_users', JSON.stringify(users));
+        localStorage.setItem('plate2plate_user', JSON.stringify({
+          name: user.name,
+          email: user.email,
+          address: user.address,
+          phone: user.phone,
+          loginTime: Date.now()
+        }));
 
-      // If already logged in, redirect
-      window.addEventListener('load', ()=>{
-        const current = localStorage.getItem('plate2plate_user');
-        if (current) window.location.href = '/dashboard.html';
-      });
-    </script>
-  </body>
+        showSuccess('Welcome to Plate2Plate! Redirecting...');
+        setTimeout(() => window.location.href = '/dashboard.html', 1500);
+      } finally {
+        signupBtn.disabled = false;
+        signupBtn.textContent = 'Create Account';
+      }
+    });
+
+    loginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      hideMessages();
+      const fd = new FormData(loginForm);
+      const { email, password } = Object.fromEntries(fd.entries());
+
+      loginBtn.disabled = true;
+      loginBtn.textContent = 'Signing in...';
+
+      const users = JSON.parse(localStorage.getItem('plate2plate_users') || '[]');
+      const user = users.find(u => u.email.toLowerCase() === email.toLowerCase() && u.password === password);
+
+      if (!user) {
+        loginBtn.disabled = false;
+        loginBtn.textContent = 'Sign In';
+        return showError('Invalid email or password');
+      }
+
+      localStorage.setItem('plate2plate_user', JSON.stringify({
+        name: user.name,
+        email: user.email,
+        address: user.address,
+        phone: user.phone,
+        loginTime: Date.now()
+      }));
+
+      showSuccess('Success! Redirecting...');
+      setTimeout(() => window.location.href = '/dashboard.html', 1000);
+    });
+
+    window.addEventListener('load', () => {
+      if (localStorage.getItem('plate2plate_user')) {
+        window.location.href = '/dashboard.html';
+      }
+    });
+  </script>
+</body>
+
 </html>
