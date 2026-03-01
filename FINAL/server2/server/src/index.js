@@ -6,8 +6,6 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { connectToDatabase, closeDatabase, toObjectId } from './config/database.js';
 import fs from 'fs';
-import CarbonCalculator from './services/carbonCalculator.js';
-import CarbonTracking from './models/carbonTracking.js';
 import donationRoutes from "./routes/donationRoutes.js";
 import mongoose from "mongoose";
 
@@ -23,10 +21,6 @@ app.use(express.static(path.join(__dirname, '..', 'public')));
 app.use("/api/donations", donationRoutes);
 
 let db = null;
-
-// Initialize carbon calculator and tracking
-const carbonCalculator = new CarbonCalculator();
-const carbonTracking = new CarbonTracking();
 
 // SSE clients
 const sseClients = new Set();
@@ -180,62 +174,6 @@ app.post('/api/listings', async (req, res) => {
 		const result = await db.collection('listings').insertOne(toInsert);
 		const row = { ...toInsert, _id: result.insertedId };
 		
-		// Automatically calculate carbon credits for the food provided
-		if (ownerEmail && quantity) {
-			try {
-				const foodWasteKg = parseQuantity(quantity);
-				const foodType = type.toLowerCase().includes('meat') ? 'meat' : 
-							   type.toLowerCase().includes('dairy') ? 'dairy' : 
-							   type.toLowerCase().includes('grain') ? 'grains' : 
-							   type.toLowerCase().includes('vegetable') ? 'vegetables' : 
-							   type.toLowerCase().includes('fruit') ? 'fruits' : 'mixed';
-				
-				const carbonResult = await carbonCalculator.calculateFoodWasteEmissions({
-					foodWasteKg,
-					foodType,
-					location: 'US'
-				});
-				
-				if (carbonResult.success) {
-					console.log('Carbon calculation successful for listing:', {
-						foodWasteKg,
-						foodType,
-						carbonCredits: carbonResult.data.carbonCredits,
-						emissions: carbonResult.data.emissions
-					});
-					
-					// Track the carbon impact automatically
-					await carbonTracking.createRecord({
-						listing_id: result.insertedId.toString(),
-						user_email: ownerEmail,
-						user_name: provider_name || ownerName, // Use provider_name if available, fallback to ownerName
-						food_waste_kg: foodWasteKg,
-						food_type: foodType,
-						transport_method: null,
-						distance_km: null,
-						emissions: {
-							food_waste: carbonResult.data.emissions.foodWaste,
-							transportation: carbonResult.data.emissions.transportation,
-							total: carbonResult.data.emissions.total
-						},
-						carbon_credits: {
-							generated: carbonResult.data.carbonCredits.generated,
-							avoided: carbonResult.data.carbonCredits.avoided,
-							net: carbonResult.data.carbonCredits.net
-						},
-						environmental_impact: carbonResult.data.environmentalImpact,
-						carbon_credit_value: carbonCalculator.calculateCarbonCreditValue(
-							carbonResult.data.carbonCredits.net,
-							'average'
-						)
-					});
-				}
-			} catch (carbonError) {
-				console.error('Error calculating carbon credits for listing:', carbonError);
-				// Don't fail the listing creation if carbon calculation fails
-			}
-		}
-		
 		broadcast('new', row);
 		res.status(201).json(row);
 	} catch (error) {
@@ -335,16 +273,6 @@ app.get('/api/analytics', async (_req, res) => {
 			db.collection('listings').countDocuments({ created_at: { $gte: weekAgo } }),
 		]);
 
-		// Calculate carbon credits from all listings
-		const carbonRecords = await db.collection('carbon_tracking').find({}).toArray();
-		console.log('Carbon records found:', carbonRecords.length);
-		if (carbonRecords.length > 0) {
-			console.log('Sample carbon record:', JSON.stringify(carbonRecords[0], null, 2));
-		}
-		const totalCarbonCredits = carbonRecords.reduce((sum, record) => sum + (record.carbon_credits?.net || 0), 0);
-		const totalCarbonValue = carbonRecords.reduce((sum, record) => sum + (record.carbon_credit_value?.netValue || 0), 0);
-		console.log('Total carbon credits:', totalCarbonCredits, 'Total value:', totalCarbonValue);
-
 		const assumedKgPerListing = 5;
 		const kgSaved = completedListings * assumedKgPerListing;
 		const carbonKgAvoided = kgSaved * 2.5;
@@ -353,12 +281,7 @@ app.get('/api/analytics', async (_req, res) => {
 		res.json({
 			totals: { totalListings, activeListings, completedListings, expiredListings, pickupsCount },
 			recent: { lastDayListings, lastWeekListings },
-			impact: { kgSaved, carbonKgAvoided, waterLitersSaved, assumedKgPerListing },
-			carbonCredits: {
-				totalCredits: totalCarbonCredits,
-				totalValue: totalCarbonValue,
-				recordsCount: carbonRecords.length
-			}
+			impact: { kgSaved, carbonKgAvoided, waterLitersSaved, assumedKgPerListing }
 		});
 	} catch (error) {
 		console.error('Error fetching analytics:', error);
@@ -586,229 +509,7 @@ app.get('/api/leaderboard', async (req, res) => {
 
 // Carbon calculation and tracking endpoints
 
-// Calculate carbon emissions for food waste
-app.post('/api/carbon/calculate', async (req, res) => {
-	try {
-		const {
-			foodWasteKg,
-			foodType,
-			location
-		} = req.body;
-
-		if (!foodWasteKg || foodWasteKg <= 0) {
-			return res.status(400).json({ error: 'Food waste amount must be greater than 0' });
-		}
-
-		const result = await carbonCalculator.calculateFoodWasteEmissions({
-			foodWasteKg,
-			foodType,
-			location
-		});
-
-		if (!result.success) {
-			return res.status(500).json({ error: result.error });
-		}
-
-		res.json(result.data);
-	} catch (error) {
-		console.error('Error calculating carbon emissions:', error);
-		res.status(500).json({ error: 'Internal server error' });
-	}
-});
-
-// Calculate carbon emissions for a specific listing
-app.post('/api/carbon/calculate-listing/:id', async (req, res) => {
-	try {
-		if (!db) return res.status(503).json({ error: 'Database not connected' });
-
-		const id = req.params.id;
-		const objectId = toObjectId(id);
-		if (!objectId) return res.status(400).json({ error: 'Invalid listing ID' });
-
-		const listing = await db.collection('listings').findOne({ _id: objectId });
-		if (!listing) return res.status(404).json({ error: 'Listing not found' });
-
-		const { transportMethod, distanceKm } = req.body;
-
-		const result = await carbonCalculator.calculateListingEmissions(listing, {
-			transportMethod: transportMethod || 'car',
-			distanceKm: distanceKm || 5
-		});
-
-		if (!result.success) {
-			return res.status(500).json({ error: result.error });
-		}
-
-		res.json(result.data);
-	} catch (error) {
-		console.error('Error calculating listing emissions:', error);
-		res.status(500).json({ error: 'Internal server error' });
-	}
-});
-
-// Track carbon emissions for a listing
-app.post('/api/carbon/track', async (req, res) => {
-	try {
-		const {
-			listing_id,
-			pickup_id,
-			user_email,
-			user_name,
-			emissions_data
-		} = req.body;
-
-		if (!listing_id || !user_email || !emissions_data) {
-			return res.status(400).json({ error: 'Missing required fields' });
-		}
-
-		// Calculate carbon credit value
-		const carbonCreditValue = carbonCalculator.calculateCarbonCreditValue(
-			emissions_data.carbon_credits.net,
-			'average'
-		);
-
-		const trackingData = {
-			listing_id,
-			pickup_id,
-			user_email,
-			user_name,
-			food_waste_kg: emissions_data.foodWasteKg,
-			food_type: emissions_data.foodType,
-			transport_method: emissions_data.transportMethod || null,
-			distance_km: emissions_data.distanceKm || null,
-			emissions: {
-				food_waste: emissions_data.emissions?.foodWaste || emissions_data.emissions?.food_waste || 0,
-				transportation: emissions_data.emissions?.transportation || 0,
-				total: emissions_data.emissions?.total || 0
-			},
-			carbon_credits: {
-				generated: emissions_data.carbon_credits?.generated || emissions_data.carbonCredits?.generated || 0,
-				avoided: emissions_data.carbon_credits?.avoided || emissions_data.carbonCredits?.avoided || 0,
-				net: emissions_data.carbon_credits?.net || emissions_data.carbonCredits?.net || 0
-			},
-			environmental_impact: emissions_data.environmentalImpact || emissions_data.environmental_impact || null,
-			carbon_credit_value: carbonCreditValue
-		};
-
-		const record = await carbonTracking.createRecord(trackingData);
-
-		// Broadcast the new carbon tracking record
-		broadcast('carbon_tracked', record);
-
-		res.status(201).json(record);
-	} catch (error) {
-		console.error('Error tracking carbon emissions:', error);
-		res.status(500).json({ error: 'Internal server error' });
-	}
-});
-
-// Get carbon tracking records for a user
-app.get('/api/carbon/records/:user', async (req, res) => {
-	try {
-		const user = req.params.user;
-		const records = await carbonTracking.getUserRecords(user);
-		res.json(records);
-	} catch (error) {
-		console.error('Error fetching carbon records:', error);
-		res.status(500).json({ error: 'Internal server error' });
-	}
-});
-
-// Get carbon tracking records for a listing
-app.get('/api/carbon/records-listing/:id', async (req, res) => {
-	try {
-		const id = req.params.id;
-		const records = await carbonTracking.getListingRecords(id);
-		res.json(records);
-	} catch (error) {
-		console.error('Error fetching listing carbon records:', error);
-		res.status(500).json({ error: 'Internal server error' });
-	}
-});
-
-// Get carbon summary statistics
-app.get('/api/carbon/summary', async (req, res) => {
-	try {
-		const { user_email } = req.query;
-		const summary = await carbonTracking.getCarbonSummary(user_email);
-		res.json(summary);
-	} catch (error) {
-		console.error('Error fetching carbon summary:', error);
-		res.status(500).json({ error: 'Internal server error' });
-	}
-});
-
-// Get top carbon contributors
-app.get('/api/carbon/leaderboard', async (req, res) => {
-	try {
-		const { limit = 10 } = req.query;
-		const contributors = await carbonTracking.getTopCarbonContributors(parseInt(limit));
-		res.json(contributors);
-	} catch (error) {
-		console.error('Error fetching carbon leaderboard:', error);
-		res.status(500).json({ error: 'Internal server error' });
-	}
-});
-
-// Verify carbon credits
-app.post('/api/carbon/verify/:id', async (req, res) => {
-	try {
-		const id = req.params.id;
-		const { verifier_email, verification_notes } = req.body;
-
-		if (!verifier_email) {
-			return res.status(400).json({ error: 'Verifier email is required' });
-		}
-
-		const record = await carbonTracking.verifyCarbonCredits(
-			id,
-			verifier_email,
-			verification_notes || ''
-		);
-
-		// Broadcast the verification
-		broadcast('carbon_verified', record);
-
-		res.json(record);
-	} catch (error) {
-		console.error('Error verifying carbon credits:', error);
-		res.status(500).json({ error: 'Internal server error' });
-	}
-});
-
 // Mark carbon credits as traded
-app.post('/api/carbon/trade/:id', async (req, res) => {
-	try {
-		const id = req.params.id;
-		const { trade_details } = req.body;
-
-		if (!trade_details) {
-			return res.status(400).json({ error: 'Trade details are required' });
-		}
-
-		const record = await carbonTracking.markCreditsAsTraded(id, trade_details);
-
-		// Broadcast the trade
-		broadcast('carbon_traded', record);
-
-		res.json(record);
-	} catch (error) {
-		console.error('Error marking carbon credits as traded:', error);
-		res.status(500).json({ error: 'Internal server error' });
-	}
-});
-
-// Get carbon credit conversion rates
-app.get('/api/carbon/rates', (_req, res) => {
-	try {
-		const rates = carbonCalculator.getCarbonCreditRates();
-		res.json(rates);
-	} catch (error) {
-		console.error('Error fetching carbon credit rates:', error);
-		res.status(500).json({ error: 'Internal server error' });
-	}
-});
-
 // Serve Next.js static files from the client build
 app.use(express.static(path.join(__dirname, '..', 'public', 'client')));
 
