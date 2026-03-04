@@ -257,37 +257,6 @@ app.delete('/api/listings/:id', async (req, res) => {
 	}
 });*/
 
-app.get('/api/analytics', async (_req, res) => {
-	try {
-		if (!db) return res.status(503).json({ error: 'Database not connected' });
-		const now = Date.now();
-		const dayAgo = now - 24 * 3600 * 1000;
-		const weekAgo = now - 7 * 24 * 3600 * 1000;
-		const [totalListings, activeListings, completedListings, expiredListings, pickupsCount, lastDayListings, lastWeekListings] = await Promise.all([
-			db.collection('listings').countDocuments({}),
-			db.collection('listings').countDocuments({ status: 'active' }),
-			db.collection('listings').countDocuments({ status: 'completed' }),
-			db.collection('listings').countDocuments({ status: 'expired' }),
-			db.collection('pickups').countDocuments({}),
-			db.collection('listings').countDocuments({ created_at: { $gte: dayAgo } }),
-			db.collection('listings').countDocuments({ created_at: { $gte: weekAgo } }),
-		]);
-
-		const assumedKgPerListing = 5;
-		const kgSaved = completedListings * assumedKgPerListing;
-		const carbonKgAvoided = kgSaved * 2.5;
-		const waterLitersSaved = kgSaved * 1500;
-
-		res.json({
-			totals: { totalListings, activeListings, completedListings, expiredListings, pickupsCount },
-			recent: { lastDayListings, lastWeekListings },
-			impact: { kgSaved, carbonKgAvoided, waterLitersSaved, assumedKgPerListing }
-		});
-	} catch (error) {
-		console.error('Error fetching analytics:', error);
-		res.status(500).json({ error: 'Internal server error' });
-	}
-});
 
 app.get('/api/events', async (req, res) => {
 	try {

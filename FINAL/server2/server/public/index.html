@@ -12,6 +12,14 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sora:wght@700;800&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="/globals.css">
+    <script>
+        // Initial theme setup to prevent flash
+        (function () {
+            const theme = localStorage.getItem('plate2plate_theme') || 'light';
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
+    <script src="/theme.js" defer></script>
     <style>
         body {
             scroll-behavior: smooth;
@@ -60,22 +68,6 @@
             z-index: 1;
         }
 
-        .stats-banner {
-            background: var(--surface);
-            padding: var(--space-xl) 0;
-            border-top: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
-        }
-
-        .stat-card {
-            text-align: center;
-        }
-
-        .stat-val {
-            font-size: 3rem;
-            font-weight: 800;
-            color: var(--primary);
-        }
 
         .feature-card {
             height: 100%;
@@ -118,6 +110,7 @@
                     style="font-family: 'Sora', sans-serif; font-weight: 800; font-size: 1.5rem; color: var(--primary);">Plate2Plate</span>
             </a>
             <div class="flex items-center gap-lg">
+                <div id="theme-toggle-container"></div>
                 <a href="/auth.html" class="nav-link">Login</a>
                 <a href="/auth.html" class="btn btn-primary">Join Now</a>
             </div>

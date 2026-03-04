@@ -12,13 +12,25 @@
     href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sora:wght@700;800&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" href="/globals.css">
+  <script>
+    (function () {
+      const theme = localStorage.getItem('plate2plate_theme') || 'light';
+      document.documentElement.setAttribute('data-theme', theme);
+    })();
+  </script>
+  <script src="/theme.js" defer></script>
   <style>
     body {
       display: flex;
       align-items: center;
       justify-content: center;
       min-height: 100vh;
-      background: linear-gradient(135deg, var(--primary-light) 0%, #ffffff 100%);
+      background: linear-gradient(135deg, var(--primary-light) 0%, var(--surface) 100%);
+      transition: background-color var(--transition-normal);
+    }
+
+    body::before {
+      display: none !important;
     }
 
     .auth-card {
@@ -74,6 +86,7 @@
 <body>
   <div class="auth-card card">
     <div class="auth-header">
+      <div id="theme-toggle-container" style="position: absolute; top: var(--space-md); right: var(--space-md);"></div>
       <a href="/" class="auth-logo flex items-center justify-center gap-sm">
         <img src="/logo.svg" alt="Logo" width="48" height="48">
         <span

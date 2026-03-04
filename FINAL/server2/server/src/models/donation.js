@@ -85,6 +85,21 @@ const donationSchema = new mongoose.Schema(
       trim: true,
     },
 
+    pickupLocation: {
+      type: String,
+      trim: true,
+    },
+
+    latitude: {
+      type: Number,
+      default: null,
+    },
+
+    longitude: {
+      type: Number,
+      default: null,
+    },
+
     code: {
       type: String,
       trim: true,

@@ -12,6 +12,13 @@
     href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sora:wght@700;800&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" href="/globals.css">
+  <script>
+    (function () {
+      const theme = localStorage.getItem('plate2plate_theme') || 'light';
+      document.documentElement.setAttribute('data-theme', theme);
+    })();
+  </script>
+  <script src="/theme.js" defer></script>
   <style>
     .dashboard-header {
       background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
@@ -32,44 +39,6 @@
       gap: var(--space-sm);
     }
 
-    .stat-grid-modern {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: var(--space-lg);
-      margin-top: calc(-1 * var(--space-xl));
-    }
-
-    .stat-card {
-      background: var(--surface);
-      padding: var(--space-xl);
-      border-radius: var(--radius-xl);
-      box-shadow: var(--shadow-lg);
-      text-align: center;
-      border: 1px solid var(--border);
-      animation: fadeIn var(--transition-normal) forwards;
-    }
-
-    .stat-icon {
-      font-size: 2rem;
-      margin-bottom: var(--space-sm);
-      display: block;
-    }
-
-    .stat-value {
-      font-size: 2.5rem;
-      font-weight: 800;
-      color: var(--primary);
-      line-height: 1;
-      margin-bottom: var(--space-xs);
-    }
-
-    .stat-label {
-      color: var(--text-muted);
-      font-weight: 600;
-      font-size: 0.875rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
 
     .action-card {
       padding: var(--space-2xl);
@@ -125,8 +94,11 @@
         <span
           style="font-family: 'Sora', sans-serif; font-weight: 800; font-size: 1.25rem; color: var(--primary);">Plate2Plate</span>
       </a>
-      <div id="user-nav" class="flex items-center gap-md">
-        <!-- Populated by JS -->
+      <div class="flex items-center gap-md">
+        <div id="theme-toggle-container"></div>
+        <div id="user-nav" class="flex items-center gap-md">
+          <!-- Populated by JS -->
+        </div>
       </div>
     </div>
   </nav>
@@ -139,24 +111,6 @@
   </header>
 
   <main class="container" style="padding-bottom: var(--space-2xl);">
-    <!-- Impact Section -->
-    <div class="stat-grid-modern">
-      <div class="stat-card">
-        <span class="stat-icon">🍲</span>
-        <div class="stat-value" id="totalListings">0</div>
-        <div class="stat-label">Total Listings</div>
-      </div>
-      <div class="stat-card" style="animation-delay: 0.1s;">
-        <span class="stat-icon">⚖️</span>
-        <div class="stat-value" id="foodSaved">0</div>
-        <div class="stat-label">Kg Food Saved</div>
-      </div>
-      <div class="stat-card" style="animation-delay: 0.2s;">
-        <span class="stat-icon">👥</span>
-        <div class="stat-value" id="peopleServed">0</div>
-        <div class="stat-label">People Served</div>
-      </div>
-    </div>
 
     <!-- Main Actions -->
     <div style="margin-top: var(--space-2xl);">
@@ -217,50 +171,11 @@
       window.location.href = '/auth.html';
     }
 
-    async function loadStats() {
-      try {
-        const response = await fetch('/api/analytics');
-        if (!response.ok) throw new Error(`API returned ${response.status}`);
-        const data = await response.json();
-
-        // Animate numbers
-        animateValue('totalListings', 0, data.totals.totalListings || 0, 1000);
-        animateValue('foodSaved', 0, data.impact.kgSaved || 0, 1000);
-        animateValue('peopleServed', 0, data.totals.pickupsCount || 0, 1000);
-
-      } catch (error) {
-        console.error('Stats loading failed:', error);
-      }
-    }
-
-    function animateValue(id, start, end, duration) {
-      const obj = document.getElementById(id);
-      if (!obj) return;
-
-      const range = end - start;
-      let current = start;
-      const increment = end > start ? 1 : -1;
-      const stepTime = Math.abs(Math.floor(duration / range));
-
-      if (range === 0) {
-        obj.textContent = end;
-        return;
-      }
-
-      const timer = setInterval(() => {
-        current += increment;
-        obj.textContent = current;
-        if (current == end) {
-          clearInterval(timer);
-        }
-      }, stepTime);
-    }
 
     window.addEventListener('load', () => {
       const user = checkLogin();
       if (user) {
         displayUserInfo(user);
-        loadStats();
       }
     });
   </script>
